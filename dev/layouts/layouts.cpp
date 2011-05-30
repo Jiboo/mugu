@@ -37,6 +37,7 @@ int main(int,char**)
 			c1->add(new random_widget());
 
 	auto t1 = std::chrono::system_clock::now();
+	c1->adapt();
 	c1->layout();
 	auto t2 = std::chrono::system_clock::now();
 
@@ -55,6 +56,7 @@ int main(int,char**)
 			c2->add(new random_widget());
 
 	t1 = std::chrono::system_clock::now();
+	c2->adapt();
 	c2->layout();
 	t2 = std::chrono::system_clock::now();
 
@@ -78,11 +80,40 @@ int main(int,char**)
 		})},
 	});
 	
+	c3->adapt();
+	
+	c3->width = 200;
+	
 	c3->layout();
-
-	c3->debug("test.png");
+	c3->debug("test flexgrid.png");
 	delete c3;
-
+	
+	grid *c4 = new grid(
+	{
+		{new random_widget(), new random_widget()},
+		{new random_widget(), new grid(
+		{
+			{new random_widget(), new random_widget()},
+			{new random_widget(), new random_widget()}
+		})},
+	});
+	
+	c4->adapt();
+	
+	c4->width = 200;
+	
+	c4->layout();
+	c4->debug("test grid.png");
+	delete c4;
+	
+	hbox *h1 = new hbox({new random_widget(), new random_widget()});
+	hbox *h2 = new hbox({new random_widget(), new random_widget()});
+	vbox *c5 = new vbox({h1, h2});
+	c5->adapt();
+	c5->layout();
+	c5->debug("test box.png");
+	
+	delete c5;
 	return 0;
 }
 

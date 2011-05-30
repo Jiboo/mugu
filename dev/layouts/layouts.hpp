@@ -133,11 +133,7 @@ public:
 		cairo_fill(pContext);
 	}
 
-	virtual void get_prefered_size(unsigned &pWidth, unsigned &pHeight)
-	{
-		pWidth = this->get_marginbox_width();
-		pHeight = this->get_marginbox_height();
-	}
+	virtual void adapt() {}
 
 	void debug(const char* pName)
 	{
@@ -219,38 +215,24 @@ public:
 
 	virtual ~grid() {}
 
-	virtual void get_prefered_size(unsigned &pWidth, unsigned &pHeight)
+	virtual void adapt()
 	{
-		unsigned max_width, max_height;
-
-		if(this->width > 0)
-			max_width = (this->width - (this->cols - 1) * this->hgap) / cols;
-		else
-			max_width = 0;
-
-		if(this->height > 0)
-			max_height = (this->height - (this->rows - 1) * this->vgap) / rows;
-		else
-			max_height = 0;
-
-		unsigned child_width, child_height;
+		unsigned max_width = 0, max_height = 0;
 
 		for(widget* child : this->children)
 		{
-			child->get_prefered_size(child_width, child_height);
+			child->adapt();
 
-			max_width = std::max(max_width, child_width);
-			max_height = std::max(max_height, child_height);
+			max_width = std::max(max_width, child->get_marginbox_width());
+			max_height = std::max(max_height, child->get_marginbox_height());
 		}
 
-		pWidth = (max_width * cols) + (this->cols - 1) * this->hgap;
-		pHeight = (max_height * rows) + (this->rows - 1) * this->vgap;
+		this->width = (max_width * cols) + (this->cols - 1) * this->hgap;
+		this->height = (max_height * rows) + (this->rows - 1) * this->vgap;
 	}
 
 	virtual void layout()
 	{
-		this->get_prefered_size(this->width, this->height);
-
 		unsigned max_width = (this->width - (this->cols - 1) * this->hgap) / cols;
 		unsigned max_height = (this->height - (this->rows - 1) * this->vgap) / rows;
 
@@ -264,12 +246,12 @@ public:
 			child->left = offset_left;
 			child->top = offset_top;
 
-			child->layout();
-
 			if(this->hfill)
 				child->set_marginbox_width(max_width);
 			if(this->vfill)
 				child->set_marginbox_height(max_height);
+				
+			child->layout();
 
 			if(++col >= this->cols)
 			{
@@ -310,20 +292,19 @@ public:
 
 	virtual ~flexgrid() {}
 
-	virtual void get_prefered_size(unsigned &pWidth, unsigned &pHeight)
+	virtual void adapt()
 	{
 		unsigned w = 0, h = 0, r, c;
-		unsigned child_width, child_height;
 
 		for(unsigned i = 0; i < this->children.size(); i++)
 		{
 			r = i / this->cols.size();
             c = i % this->cols.size();
 
-			children[i]->get_prefered_size(child_width, child_height);
+			children[i]->adapt();
 
-			rows[r] = std::max(rows[r], child_height);
-			cols[c] = std::max(cols[c], child_width);
+			cols[c] = std::max(cols[c], children[i]->get_marginbox_width());
+			rows[r] = std::max(rows[r], children[i]->get_marginbox_height());
 		}
 
 		for(unsigned col : cols)
@@ -332,18 +313,43 @@ public:
 		for(unsigned row : rows)
 			h += row;
 
-		pWidth = w + (this->cols.size() - 1) * this->hgap;
-		pHeight = h + (this->rows.size() - 1) * this->vgap;
+		this->width = w + (this->cols.size() - 1) * this->hgap;
+		this->height = h + (this->rows.size() - 1) * this->vgap;
 	}
 
 	virtual void layout()
 	{
-		this->get_prefered_size(this->width, this->height);
-
+		unsigned w = 0, h = 0, r, c;
 		unsigned offset_left = this->get_contentbox_offset_left();
 		unsigned offset_top = this->get_contentbox_offset_top();
-
-		unsigned r, c;
+		
+		// balance
+		for(unsigned &col : cols)
+			w += col;
+		for(unsigned &row : rows)
+			h += row;
+			
+		signed diff_w = ((signed)this->width - (this->cols.size() - 1) * this->hgap) - (signed)w;
+		signed diff_h = ((signed)this->height - (this->rows.size() - 1) * this->vgap) - (signed)h;
+		
+		if(diff_w)
+		{
+			if(diff_w > 0)
+				this->cols[0] += diff_w % this->cols.size();
+			else
+				this->cols[0] -= diff_w % this->cols.size();
+			for(unsigned &col : this->cols)
+				col += diff_w / (signed)this->cols.size();
+		}
+		if(diff_h)
+		{
+			if(diff_h > 0)
+				this->rows[0] += diff_h % this->rows.size();
+			else
+				this->rows[0] -= diff_h % this->rows.size();
+			for(unsigned &row : this->rows)
+				row += diff_h / (signed)this->rows.size();
+		}
 
 		for(unsigned i = 0; i < this->children.size(); i++)
 		{
@@ -355,13 +361,13 @@ public:
 			child->left = offset_left;
 			child->top = offset_top;
 
-			child->layout();
-
 			if(this->hfill)
 				child->set_marginbox_width(cols[c]);
 			if(this->vfill)
 				child->set_marginbox_height(rows[r]);
-
+				
+			child->layout();
+				
 			if(c == (this->cols.size() - 1))
 			{
 				offset_left = this->get_contentbox_offset_left();
