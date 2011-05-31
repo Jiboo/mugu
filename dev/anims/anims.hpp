@@ -9,6 +9,7 @@ http://creativecommons.org/licenses/by/3.0/
 #include <cmath>
 #include <thread>
 #include <iostream>
+#include <functional>
 
 // https://github.com/madrobby/emile
 
@@ -26,9 +27,10 @@ namespace transitions
 	}
 }
 	
-template <typename tDataType, class Rep, class Period>
+template <typename tDataType, typename tPassedDataType, class Rep, class Period>
 std::thread * anim(
-	tDataType &pData, tDataType pTarget, 
+	tDataType &pData, 
+	tPassedDataType pTarget, 
 	std::chrono::duration<Rep, Period> pDuration, 
 	std::function<double (double)> pTransition = &transitions::none,
 	std::function<void (void)> pStep = []{},
@@ -56,6 +58,41 @@ std::thread * anim(
 		}
 		
 		pData = pTarget;
+		
+		pEnd();
+	});
+}
+
+template <typename tFuncType, typename tPassedDataType, class Rep, class Period>
+std::thread * anim(
+	tFuncType pFunc,
+	tPassedDataType pOrigin,
+	tPassedDataType pTarget,
+	std::chrono::duration<Rep, Period> pDuration,
+	std::function<double (double)> pTransition = &transitions::none,
+	std::function<void (void)> pStep = []{},
+	std::function<void (void)> pEnd = []{})
+{
+	return new std::thread([pFunc, pOrigin, pTarget, pDuration, pTransition, pStep, pEnd]
+	{
+		auto start = std::chrono::system_clock::now();
+		auto time = std::chrono::system_clock::now();
+		
+		std::chrono::milliseconds duration = std::chrono::duration_cast<std::chrono::milliseconds>(pDuration);
+		
+		while(time < (start + duration))
+		{
+			std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(time - start);		
+			pFunc(pOrigin + (pTarget - pOrigin) * pTransition((double)diff.count() / (double)duration.count()));
+			
+			pStep();
+
+			time = std::chrono::system_clock::now();
+			//std::this_thread::yield(); // Would be nice if no pStep callback
+			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		}
+		
+		pFunc(pTarget);
 		
 		pEnd();
 	});
