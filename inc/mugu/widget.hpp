@@ -24,6 +24,8 @@ namespace mugu
 
 class widget
 {
+	friend class container;
+
 protected:
 	widget* parent;
 
@@ -55,7 +57,7 @@ public:
 		this->left = 0;
 
 		this->set_border_size(0);
-		this->set_border_style(0);
+		this->set_border_style(BORDER_STYLE_NONE);
 		
 		this->set_margin(0);
 		this->set_padding(0);
@@ -65,31 +67,34 @@ public:
 		this->focus = false;
 	}
 	
-	virtual ~widget()
-	{
-		
-	}
+	virtual ~widget() {}
 
 public:
 	virtual void layout() {}
 	virtual void adapt() {}
-	virtual void draw(cairo_t* pContext) {}
+	virtual void draw(cairo_t*) {}
+	
+	virtual void set_size(unsigned pWidth, unsigned pHeight)
+	{
+		this->width = pWidth;
+		this->height = pHeight;
+	}
 
 public:
 	unsigned get_marginbox_offset_left() { return this->left; }
 	unsigned get_marginbox_offset_top() { return this->top; }
 	unsigned get_marginbox_width() { return this->get_borderbox_width() + this->margin_top + this->margin_bottom; }
 	unsigned get_marginbox_height() { return this->get_borderbox_height() + this->margin_top + this->margin_bottom; }
-	void set_marginbox_width(unsigned pWidth) { this->set_width(pWidth - this->margin_left - this->margin_right - this->border_left - this->border_right - this->padding_left - this->padding_right); }
-	void set_marginbox_height(unsigned pHeight) { this->set_height(pHeight - this->margin_top - this->margin_bottom - this->border_top - this->border_bottom - this->padding_top - this->padding_bottom); }
+	void set_marginbox_width(unsigned pWidth) { this->set_width(pWidth - this->margin_left - this->margin_right - this->border_size_left - this->border_size_right - this->padding_left - this->padding_right); }
+	void set_marginbox_height(unsigned pHeight) { this->set_height(pHeight - this->margin_top - this->margin_bottom - this->border_size_top - this->border_size_bottom - this->padding_top - this->padding_bottom); }
 
 	unsigned get_borderbox_offset_left() { return get_marginbox_offset_left() + this->margin_left; }
 	unsigned get_borderbox_offset_top() { return get_marginbox_offset_top() + this->margin_top; }
-	unsigned get_borderbox_width() { return this->get_paddingbox_width() + this->border_top + this->border_bottom; }
-	unsigned get_borderbox_height() { return this->get_paddingbox_height() + this->border_top + this->border_bottom; }
+	unsigned get_borderbox_width() { return this->get_paddingbox_width() + this->border_size_top + this->border_size_bottom; }
+	unsigned get_borderbox_height() { return this->get_paddingbox_height() + this->border_size_top + this->border_size_bottom; }
 
-	unsigned get_paddingbox_offset_left() { return get_borderbox_offset_left() +  this->border_left; }
-	unsigned get_paddingbox_offset_top() { return get_borderbox_offset_top() + this->border_top; }
+	unsigned get_paddingbox_offset_left() { return get_borderbox_offset_left() +  this->border_size_left; }
+	unsigned get_paddingbox_offset_top() { return get_borderbox_offset_top() + this->border_size_top; }
 	unsigned get_paddingbox_width() { return get_contentbox_width() + this->padding_top + this->padding_bottom; }
 	unsigned get_paddingbox_height() { return get_contentbox_height() + this->padding_top + this->padding_bottom; }
 
@@ -129,9 +134,9 @@ public:
 };
 
 template <typename tWidgetType, typename tDataType, typename tPassedType, class Rep, class Period>
-void widget::anim(void(tWidgetType::*pFunc)(tDataType), tPassedType pOrigin, tPassedType pTarget, std::chrono::duration<Rep, Period> pDuration, std::function<double (double)> pTransition = &transitions::ease)
+void widget::anim(void(tWidgetType::*pFunc)(tDataType), tPassedType pOrigin, tPassedType pTarget, std::chrono::duration<Rep, Period> pDuration, std::function<double (double)> pTransition)
 {
-	context::recycle(new std::thread([pWidget, pFunc, pOrigin, pTarget, pDuration, pTransition]
+	context::recycle(new std::thread([this, pFunc, pOrigin, pTarget, pDuration, pTransition]
 	{
 		auto start = std::chrono::system_clock::now();
 		auto time = std::chrono::system_clock::now();

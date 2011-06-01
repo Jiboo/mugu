@@ -10,6 +10,9 @@
  
 #pragma once
 
+#include <vector>
+#include <algorithm>
+
 #include "mugu/container.hpp"
 #include "mugu/defines.hpp"
 
@@ -114,8 +117,8 @@ void flexgrid::layout()
 		r = i / this->cols.size();
 		c = i % this->cols.size();
 
-		child->left = offset_left;
-		child->top = offset_top;
+		child->set_left(offset_left);
+		child->set_top(offset_top);
 
 		if(this->hfill)
 			child->set_marginbox_width(cols[c]);

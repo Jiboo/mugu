@@ -8,6 +8,8 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
 
+#pragma once
+
 namespace mugu
 {
 

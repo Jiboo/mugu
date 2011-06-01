@@ -31,3 +31,4 @@ double ease(double pPos)
 } // namespace transitions
 
 } // namespace mugu
+

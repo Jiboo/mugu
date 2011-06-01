@@ -8,24 +8,27 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
 
-#include <vector>
+#pragma once
 
-#include "widget.hpp"
+#include <vector>
+#include <cairo/cairo.h>
+
+#include "mugu/widget.hpp"
 
 namespace mugu
 {
 
-class container : public widget
+class container : public virtual widget
 {
 protected:
 	std::vector<widget*> children;
 	
 public:
-	MUGU_PROP_SET(, unsigned, hgap);
-	MUGU_PROP_SET(, unsigned, vgap);
+	MUGU_PROP(, set, unsigned, hgap);
+	MUGU_PROP(, set, unsigned, vgap);
 
-	MUGU_PROP_HAS(, unsigned, hfill);
-	MUGU_PROP_HAS(, unsigned, vfill);
+	MUGU_PROP(, has, unsigned, hfill);
+	MUGU_PROP(, has, unsigned, vfill);
 
 public:
 	container()

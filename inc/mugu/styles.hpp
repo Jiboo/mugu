@@ -8,7 +8,7 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
 
-#include "source.hpp"
+#pragma once
 
 #include <cairo/cairo.h>
 

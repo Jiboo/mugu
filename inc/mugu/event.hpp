@@ -13,11 +13,10 @@
 #include <vector>
 #include <functional>
 #include <stdexcept>
-#include <iostream>
 #include <thread>
 
-#include "mugu/context.hpp"
 #include "mugu/defines.hpp"
+#include "mugu/context.hpp"
 
 namespace mugu
 {
@@ -64,7 +63,7 @@ public:
 };
 
 template<typename... tArgTypes>
-void event::run(tArgTypes...pArgs)
+void event<tArgTypes...>::run(tArgTypes...pArgs)
 {
 	try
 	{

@@ -15,7 +15,7 @@ class widget
 public:
 	unsigned width;
 	
-	virtual void wtf()
+	virtual void layout()
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
@@ -24,7 +24,7 @@ public:
 class container : public virtual widget
 {
 public:
-	virtual void wtf()
+	virtual void layout()
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
@@ -33,7 +33,7 @@ public:
 class grid : public container
 {
 public:
-	virtual void wtf()
+	virtual void layout()
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
@@ -43,16 +43,12 @@ template<class tContainer>
 class dialog : virtual public widget, public tContainer
 {
 public:
-	virtual void wtf()
-	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-	}
 };
 
 int main(int, const char**)
 {
 	dialog<grid> test;
-	test.wtf();
+	test.layout();
 	return 0;
 }
 

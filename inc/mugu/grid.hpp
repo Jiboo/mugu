@@ -19,8 +19,8 @@ namespace mugu
 class grid : public container
 {
 public:
-	MUGU_PROP(, set, unsigned rows);
-	MUGU_PROP(, set, unsigned cols);
+	MUGU_PROP(, set, unsigned, rows);
+	MUGU_PROP(, set, unsigned, cols);
 
 public:
 	grid(unsigned pRows, unsigned pCols)
@@ -76,8 +76,8 @@ void grid::layout()
 
 	for(widget* child : this->children)
 	{
-		child->left = offset_left;
-		child->top = offset_top;
+		child->set_left(offset_left);
+		child->set_top(offset_top);
 
 		if(this->hfill)
 			child->set_marginbox_width(max_width);
