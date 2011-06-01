@@ -14,7 +14,7 @@ namespace mugu
 class context
 {
 protected:
-	static std::vector<std::thread*> garbages;
+	std::vector<std::thread*> garbages;
 	xcb_connection_t *connection;
 	
 	const xcb_screen_t *screen;
@@ -33,7 +33,8 @@ public:
 	{
 		xcb_disconnect(this->connection);
 	}
-	
+
+protected:
 	xcb_window_t create_window()
 	{
 		xcb_window_t window = xcb_generate_id(this->connection);
@@ -52,15 +53,22 @@ public:
 		return window;
 	}
 	
-	void flush()
-	{
-		xcb_flush(this->connection);
-	}
-
 public:
+	static context& instance ()
+	{
+		std::cout << "creating context" << std::endl;
+		static context singleton;
+		return singleton; 
+	}
+	
+	static void flush()
+	{
+		xcb_flush(this->instance().connection);
+	}
+	
 	static void recycle(std::thread* pGarbage)
 	{
-		garbages.push_back(pGarbage);
+		this->instance().garbages.push_back(pGarbage);
 	}
 };
 
