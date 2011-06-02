@@ -24,8 +24,8 @@ protected:
 	std::vector<widget*> children;
 	
 public:
-	MUGU_PROP(, set, unsigned, hgap);
-	MUGU_PROP(, set, unsigned, vgap);
+	MUGU_PROP(, get, unsigned, hgap);
+	MUGU_PROP(, get, unsigned, vgap);
 
 	MUGU_PROP(, has, unsigned, hfill);
 	MUGU_PROP(, has, unsigned, vfill);

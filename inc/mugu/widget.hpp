@@ -30,10 +30,10 @@ protected:
 	widget* parent;
 
 public:
-	MUGU_PROP(virtual, set, unsigned, width);
-	MUGU_PROP(virtual, set, unsigned, height);
-	MUGU_PROP(, set, unsigned, top);
-	MUGU_PROP(, set, unsigned, left);
+	MUGU_PROP(virtual, get, unsigned, width);
+	MUGU_PROP(virtual, get, unsigned, height);
+	MUGU_PROP(, get, unsigned, top);
+	MUGU_PROP(, get, unsigned, left);
 
 	MUGU_STYLE_DIRECTIONS(unsigned, border_size);
 	MUGU_STYLE_DIRECTIONS(border_style, border_style);
@@ -136,7 +136,8 @@ public:
 template <typename tWidgetType, typename tDataType, typename tPassedType, class Rep, class Period>
 void widget::anim(void(tWidgetType::*pFunc)(tDataType), tPassedType pOrigin, tPassedType pTarget, std::chrono::duration<Rep, Period> pDuration, std::function<double (double)> pTransition)
 {
-	context::recycle(new std::thread([this, pFunc, pOrigin, pTarget, pDuration, pTransition]
+	tWidgetType *pWidget = dynamic_cast<tWidgetType*>(this);
+	context::recycle(new std::thread([pWidget, pFunc, pOrigin, pTarget, pDuration, pTransition]
 	{
 		auto start = std::chrono::system_clock::now();
 		auto time = std::chrono::system_clock::now();
@@ -146,13 +147,13 @@ void widget::anim(void(tWidgetType::*pFunc)(tDataType), tPassedType pOrigin, tPa
 		while(time < (start + duration))
 		{
 			std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(time - start);		
-			(this->*(pFunc))(pOrigin + (pTarget - pOrigin) * pTransition((double)diff.count() / (double)duration.count()));
+			(pWidget->*(pFunc))(pOrigin + (pTarget - pOrigin) * pTransition((double)diff.count() / (double)duration.count()));
 		
 			time = std::chrono::system_clock::now();
-			std::this_thread::sleep_for(std::chrono::milliseconds(20)); // 50 fps
+			std::this_thread::sleep_for(std::chrono::milliseconds(40)); // 25 fps
 		}
 	
-		(this->*(pFunc))(pTarget);
+		(pWidget->*(pFunc))(pTarget);
 	}));
 }
 

@@ -8,8 +8,6 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
 
-#pragma once
-
 #define _GLIBCXX_USE_SCHED_YIELD
 #define _GLIBCXX_USE_NANOSLEEP
 

@@ -36,20 +36,29 @@ public:
 	
 	~context()
 	{
+		
 		xcb_disconnect(this->con);
 	}
 
 public:
 	static context& instance ()
 	{
-		std::cout << "creating context" << std::endl;
 		static context singleton;
 		return singleton; 
 	}
-
+	
+	static void clean()
+	{
+		for(std::thread *garbage : instance().garbages)
+		{
+			if(garbage->joinable())
+				garbage->join();
+		}
+	}
+	
 	static void flush() { xcb_flush(instance().con); }
 	static void recycle(std::thread* pGarbage) { instance().garbages.push_back(pGarbage); }
-	static const xcb_connection_t *connection() { return instance().con; }
+	static xcb_connection_t *connection() { return instance().con; }
 	static const xcb_screen_t *screen() { return instance().scr; }
 	static const xcb_setup_t *setup() { return instance().set; }
 };

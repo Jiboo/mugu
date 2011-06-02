@@ -29,8 +29,12 @@ protected:
 	xcb_window_t window;
 	
 public:
-	dialog()
+	//using tContainer::tContainer;
+
+	dialog() : tContainer()
 	{
+		this->parent = nullptr;
+	
 		this->window = xcb_generate_id(context::connection());
 
 		xcb_create_window(context::connection(),
@@ -59,24 +63,32 @@ public:
 			xcb_map_window(context::connection(), this->window);
 		else
 			xcb_unmap_window(context::connection(), this->window);
+		context::flush();
 	}
 	
 	virtual void set_width(unsigned pWidth)
 	{
 		uint32_t temp = pWidth;
 		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_WIDTH, &temp);
+		this->width = pWidth;
+		context::flush();
 	}
 	
 	virtual void set_height(unsigned pHeight)
 	{
 		uint32_t temp = pHeight;
 		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_HEIGHT, &temp);
+		this->height = pHeight;
+		context::flush();
 	}
 	
 	virtual void set_size(unsigned pWidth, unsigned pHeight)
 	{
 		uint32_t temp[2] = {pWidth, pHeight};
 		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_HEIGHT, temp);
+		this->width = pWidth;
+		this->height = pHeight;
+		context::flush();
 	}
 
 public:
@@ -87,6 +99,7 @@ public:
 		
 		xcb_change_property(context::connection(), XCB_PROP_MODE_REPLACE,
 			this->win, WM_NAME, STRING, 8, pTitle.size(), pTitle.length());
+		context::flush();
 	}
 };
 

@@ -19,10 +19,12 @@ namespace mugu
 class grid : public container
 {
 public:
-	MUGU_PROP(, set, unsigned, rows);
-	MUGU_PROP(, set, unsigned, cols);
+	MUGU_PROP(, get, unsigned, rows);
+	MUGU_PROP(, get, unsigned, cols);
 
 public:
+	grid() {}
+
 	grid(unsigned pRows, unsigned pCols)
 	{
 		this->rows = pRows;
@@ -62,6 +64,10 @@ void grid::adapt()
 
 	this->set_width((max_width * cols) + (this->cols - 1) * this->hgap);
 	this->set_height((max_height * rows) + (this->rows - 1) * this->vgap);
+	
+	if(this->parent != nullptr)
+		parent->layout();
+	this->layout();
 }
 
 void grid::layout()
