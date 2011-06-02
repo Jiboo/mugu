@@ -30,6 +30,8 @@ int main(int, char**)
 	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)800, std::chrono::seconds(3));
 	
 	context::clean();
+	
+	delete d1;
 	return 0;
 }
 

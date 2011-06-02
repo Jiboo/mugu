@@ -36,7 +36,6 @@ public:
 	
 	~context()
 	{
-		
 		xcb_disconnect(this->con);
 	}
 
@@ -53,7 +52,9 @@ public:
 		{
 			if(garbage->joinable())
 				garbage->join();
+			delete garbage;
 		}
+		instance().garbages.clear();
 	}
 	
 	static void flush() { xcb_flush(instance().con); }
