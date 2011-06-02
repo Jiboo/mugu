@@ -71,8 +71,7 @@ void flexgrid::adapt()
 	for(unsigned row : rows)
 		h += row;
 
-	this->set_width(w + (this->cols.size() - 1) * this->hgap);
-	this->set_height(h + (this->rows.size() - 1) * this->vgap);
+	this->set_size(w + (this->cols.size() - 1) * this->hgap, h + (this->rows.size() - 1) * this->vgap);
 
 	if(this->parent != nullptr)
 		parent->layout();

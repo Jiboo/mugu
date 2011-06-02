@@ -72,13 +72,20 @@ public:
 public:
 	virtual void layout() {}
 	virtual void adapt() {}
-	virtual void draw(cairo_t*) {}
 	
 	virtual void set_size(unsigned pWidth, unsigned pHeight)
 	{
 		this->width = pWidth;
 		this->height = pHeight;
 	}
+	
+	virtual void refresh() {}
+	virtual void redraw() {}
+	
+	virtual void draw(cairo_t*) {}
+	virtual void invalidates(unsigned, unsigned, unsigned, unsigned) {}
+	
+	virtual void __configure_notify(unsigned, unsigned) {}
 
 public:
 	unsigned get_marginbox_offset_left() { return this->left; }

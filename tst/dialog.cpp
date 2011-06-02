@@ -23,10 +23,13 @@ int main(int, char**)
 	d1->set_visible(true);
 	d1->set_rows(2);
 	d1->set_cols(1);
-	d1->add(new random_widget());
-	d1->add(new random_widget());
-	d1->adapt();
+	d1->set_title("Coucou lol");
 	
+	d1->add(new random_widget());
+	d1->add(new random_widget());
+	
+	d1->adapt();
+
 	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)800, std::chrono::seconds(3));
 	
 	context::clean();
