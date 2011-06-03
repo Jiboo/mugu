@@ -8,9 +8,6 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
 
-#define _GLIBCXX_USE_SCHED_YIELD
-#define _GLIBCXX_USE_NANOSLEEP
-
 #include "mugu/debug.hpp"
 #include "mugu/defines.hpp"
 #include "mugu/styles.hpp"
@@ -27,4 +24,5 @@
 			#include "mugu/hbox.hpp"
 			#include "mugu/vbox.hpp"
 	#include "mugu/dialog.hpp"
+	#include "mugu/clickable.hpp"
 

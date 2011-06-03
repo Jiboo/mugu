@@ -10,17 +10,19 @@
 
 #pragma once
 
+#include <iostream>
 #include <cairo/cairo.h>
 
-#include "mugu/widget.hpp"
+#include "mugu/clickable.hpp"
 
 namespace mugu
 {
 
-class random_widget : public widget
+class random_widget : public clickable
 {
 public:
 	random_widget()
+		: clickable(std::bind(&random_widget::__click_final, this))
 	{
 		this->width = rand() % 100 + 1;
 		this->height = rand() % 20 + 1;
@@ -34,27 +36,12 @@ public:
 	{
 	}
 	
-	virtual void draw(cairo_t* pContext)
+	virtual void draw(cairo_t* pContext);
+
+protected:
+	void __click_final()
 	{
-		//margin
-		cairo_set_source_rgb(pContext, 1, 0, 0);
-		cairo_rectangle(pContext, this->get_marginbox_offset_left(), this->get_marginbox_offset_top(), this->get_marginbox_width(), this->get_marginbox_height());
-		cairo_fill(pContext);
-
-		//border
-		cairo_set_source_rgb(pContext, 0, 1, 0);
-		cairo_rectangle(pContext, this->get_borderbox_offset_left(), this->get_borderbox_offset_top(), this->get_borderbox_width(), this->get_borderbox_height());
-		cairo_fill(pContext);
-
-		// padding
-		cairo_set_source_rgb(pContext, 0, 0, 1);
-		cairo_rectangle(pContext, this->get_paddingbox_offset_left(), this->get_paddingbox_offset_top(), this->get_paddingbox_width(), this->get_paddingbox_height());
-		cairo_fill(pContext);
-
-		// content
-		cairo_set_source_rgb(pContext, 1, 1, 1);
-		cairo_rectangle(pContext, this->get_contentbox_offset_left(), this->get_contentbox_offset_top(), this->get_contentbox_width(), this->get_contentbox_height());
-		cairo_fill(pContext);
+		std::cout << this << " clicked!" << std::endl;
 	}
 };
 

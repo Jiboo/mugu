@@ -11,7 +11,6 @@
 #pragma once
 
 #include <string>
-#include <mutex>
 
 #include <xcb/xcb_atom.h>
 #include <cairo/cairo-xcb.h>
@@ -33,10 +32,8 @@ protected:
 	cairo_surface_t *surface;
 	cairo_surface_t *cache;
 	
-	std::mutex resizing;
-	
 public:
-	//using tContainer::tContainer;
+	//using tContainer::tContainer; //FIXME Waiting compiler support
 
 	dialog() : tContainer()
 	{
@@ -55,6 +52,8 @@ public:
 			context::screen()->white_pixel,
 			XCB_EVENT_MASK_EXPOSURE
 				| XCB_EVENT_MASK_STRUCTURE_NOTIFY
+				| XCB_EVENT_MASK_BUTTON_PRESS
+				| XCB_EVENT_MASK_BUTTON_RELEASE
 		};
 
 		xcb_create_window(context::connection(),
@@ -68,7 +67,7 @@ public:
 			context::screen()->root_visual,
 			mask, values);
 	
-		context::register_dialog(dynamic_cast<widget*>(this), this->window);
+		context::register_dialog(dynamic_cast<container*>(this), this->window);
 	}
 
 	virtual ~dialog()

@@ -12,6 +12,8 @@
 
 #include <cairo/cairo.h>
 
+#include "mugu/source.hpp"
+
 namespace mugu
 {
 

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "mugu/flexgrid.hpp"
+
 namespace mugu
 {
 

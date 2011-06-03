@@ -1,5 +1,5 @@
 /*
- * transitions.hpp
+ * button.hpp
  * This file is part of Mugu
  *
  * Copyright (C) 2011 - LEPESME "Jiboo" Jean-Baptiste
@@ -7,28 +7,22 @@
  * Mugu is licensed under a Creative Commons Attribution 3.0 Unported License
  * http://creativecommons.org/licenses/by/3.0/
  */
- 
+
 #pragma once
- 
-#include <cmath>
+
+#include <string>
+
+#include "mugu/clickable.hpp"
 
 namespace mugu
 {
 
-namespace transitions
+class button : public clickable
 {
-
-inline double linear(double pPos)
-{
-	return pPos;
-}
-
-inline double ease(double pPos)
-{
-	return (-cos(pPos * M_PI) / 2) + 0.5;
-}
-
-} // namespace transitions
+public:
+	MUGU_PROP(, set, std::string, text);
+	
+	
+};
 
 } // namespace mugu
-

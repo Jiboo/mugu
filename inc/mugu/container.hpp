@@ -18,6 +18,8 @@
 namespace mugu
 {
 
+class clickable;
+
 class container : public virtual widget
 {
 protected:
@@ -47,6 +49,9 @@ public:
 
 public:
 	virtual void draw(cairo_t* pContext);
+	
+	virtual void __configure_notify(unsigned, unsigned) {}
+	virtual void __handle_button(unsigned pLeft, unsigned pTop, bool pClicked);
 
 public:
 	void add(widget* pChild)
@@ -54,19 +59,9 @@ public:
 		pChild->parent = this;
 		this->children.push_back(pChild);
 	}
+	
+	clickable* get_button_widget(container *pContainer, unsigned pLeft, unsigned pTop);
 };
-
-void container::draw(cairo_t* pContext)
-{
-	if(this->visible)
-	{
-		for(widget* child : children)
-		{
-			if(child->visible)
-				child->draw(pContext);
-		}
-	}
-}
 
 } // namespace mugu
 

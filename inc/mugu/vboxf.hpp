@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "mugu/grid.hpp"
+
 namespace mugu
 {
 

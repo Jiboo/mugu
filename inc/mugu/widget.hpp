@@ -17,6 +17,7 @@
 
 #include "mugu/defines.hpp"
 #include "mugu/styles.hpp"
+#include "mugu/transitions.hpp"
 #include "mugu/context.hpp"
 
 namespace mugu
@@ -84,8 +85,6 @@ public:
 	
 	virtual void draw(cairo_t*) {}
 	virtual void invalidates(unsigned, unsigned, unsigned, unsigned) {}
-	
-	virtual void __configure_notify(unsigned, unsigned) {}
 
 public:
 	unsigned get_marginbox_offset_left() { return this->left; }
@@ -115,13 +114,13 @@ public:
 	bool contains(unsigned short pLeft, unsigned short pTop)
 	{
 		return 
-			pLeft > this->left
+			pLeft > this->get_borderbox_offset_left()
 				&&
-			pLeft < (this->left + this->width)
+			pLeft < (this->get_borderbox_offset_left() + get_borderbox_width())
 				&&
-			pTop > this->top
+			pTop > this->get_borderbox_offset_top()
 				&&
-			pTop < (this->top + this->height);
+			pTop < (this->get_borderbox_offset_top() + get_borderbox_height());
 	}
 
 	bool overlaps(unsigned short pLeft, unsigned short pTop, unsigned short pWidth, unsigned short pHeight)
@@ -136,15 +135,16 @@ public:
 			(this->top + this->height) > pTop;
 	}
 	
-	template <typename tWidgetType, typename tDataType, typename tPassedType, class Rep, class Period>
-	void anim(void(tWidgetType::*pFunc)(tDataType), tPassedType pOrigin, tPassedType pTarget, std::chrono::duration<Rep, Period> pDuration, std::function<double (double)> pTransition = &transitions::ease);
+	// http://gcc.gnu.org/bugzilla/show_bug.cgi?id=49276
+	template <typename tWidgetType, typename tDataType, class Rep, class Period>
+	void anim(void(tWidgetType::*pFunc)(tDataType), tDataType pOrigin, tDataType pTarget, std::chrono::duration<Rep, Period> pDuration, std::function<double (double)> pTransition = &transitions::ease/*, std::function<void (void)> pStep = []{}, std::function<void (void)> pEnd = []{}*/);
 };
 
-template <typename tWidgetType, typename tDataType, typename tPassedType, class Rep, class Period>
-void widget::anim(void(tWidgetType::*pFunc)(tDataType), tPassedType pOrigin, tPassedType pTarget, std::chrono::duration<Rep, Period> pDuration, std::function<double (double)> pTransition)
+template <typename tWidgetType, typename tDataType, class Rep, class Period>
+void widget::anim(void(tWidgetType::*pFunc)(tDataType), tDataType pOrigin, tDataType pTarget, std::chrono::duration<Rep, Period> pDuration, std::function<double (double)> pTransition/*, std::function<void()> pStep, std::function<void()> pEnd*/)
 {
 	tWidgetType *pWidget = dynamic_cast<tWidgetType*>(this);
-	context::recycle(new std::thread([pWidget, pFunc, pOrigin, pTarget, pDuration, pTransition]
+	context::recycle(new std::thread([pWidget, pFunc, pOrigin, pTarget, pDuration, pTransition/*, pStep, pEnd*/]
 	{
 		auto start = std::chrono::system_clock::now();
 		auto time = std::chrono::system_clock::now();
@@ -155,12 +155,16 @@ void widget::anim(void(tWidgetType::*pFunc)(tDataType), tPassedType pOrigin, tPa
 		{
 			std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(time - start);		
 			(pWidget->*(pFunc))(pOrigin + (pTarget - pOrigin) * pTransition((double)diff.count() / (double)duration.count()));
+			
+			//pStep();
 		
 			time = std::chrono::system_clock::now();
 			std::this_thread::sleep_for(std::chrono::milliseconds(40)); // 25 fps
 		}
 	
 		(pWidget->*(pFunc))(pTarget);
+		
+		//pEnd();
 	}));
 }
 

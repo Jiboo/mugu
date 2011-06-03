@@ -1,2 +1,4 @@
 *.png
-a.out
+*.out
+*.a
+*.o

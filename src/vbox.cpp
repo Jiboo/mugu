@@ -1,5 +1,5 @@
 /*
- * transitions.hpp
+ * vbox.cpp
  * This file is part of Mugu
  *
  * Copyright (C) 2011 - LEPESME "Jiboo" Jean-Baptiste
@@ -8,27 +8,9 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
  
-#pragma once
- 
-#include <cmath>
+#include "mugu/vbox.hpp"
 
 namespace mugu
 {
 
-namespace transitions
-{
-
-inline double linear(double pPos)
-{
-	return pPos;
-}
-
-inline double ease(double pPos)
-{
-	return (-cos(pPos * M_PI) / 2) + 0.5;
-}
-
-} // namespace transitions
-
 } // namespace mugu
-

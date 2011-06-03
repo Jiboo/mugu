@@ -21,16 +21,25 @@ int main(int, char**)
 
 	dialog<grid> *d1 = new dialog<grid>;
 	d1->set_visible(true);
-	d1->set_rows(2);
+	d1->set_rows(4);
 	d1->set_cols(1);
 	d1->set_title("Coucou lol");
 	
-	d1->add(new random_widget());
-	d1->add(new random_widget());
+	random_widget *r1 = new random_widget();
+	random_widget *r2 = new random_widget();
+	random_widget *r3 = new random_widget();
+	random_widget *r4 = new random_widget();
+	
+	d1->add(r1);
+	d1->add(r2);
+	d1->add(r3);
+	d1->add(r4);
 	
 	d1->adapt();
 
 	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)800, std::chrono::seconds(3));
+	
+	//r1->anim(&random_widget::set_width, r1->get_width(), (unsigned)800, std::chrono::seconds(3));
 	
 	context::clean();
 	
