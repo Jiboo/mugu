@@ -9,7 +9,7 @@
  */
 
 #include "mugu/widget.hpp"
-#include "mugu/container.hpp"
+#include "mugu/base_dialog.hpp"
 
 namespace mugu
 {

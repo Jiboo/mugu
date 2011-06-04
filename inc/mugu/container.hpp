@@ -20,8 +20,10 @@ namespace mugu
 
 class clickable;
 
-class container : public virtual widget
+class container : public widget
 {
+	friend class base_dialog;
+
 protected:
 	std::vector<widget*> children;
 	
@@ -49,12 +51,6 @@ public:
 
 public:
 	virtual void draw(cairo_t* pContext);
-	
-	virtual void __configure_notify(unsigned, unsigned) {}
-	virtual void __handle_button(unsigned pLeft, unsigned pTop, bool pClicked);
-	
-	virtual void redraw(widget *) {}
-	virtual void refresh(widget *) {}
 
 public:
 	void add(widget* pChild)
@@ -64,8 +60,6 @@ public:
 		
 		this->children.push_back(pChild);
 	}
-	
-	clickable* get_widget(container *pContainer, unsigned pLeft, unsigned pTop);
 };
 
 } // namespace mugu

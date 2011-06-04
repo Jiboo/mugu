@@ -20,13 +20,13 @@
 namespace mugu
 {
 
-class container;
+class base_dialog;
 
 class context
 {
 protected:
 	std::vector<std::thread*> garbages;
-	std::map<xcb_window_t, container*> dialogs;
+	std::map<xcb_window_t, base_dialog*> dialogs;
 	
 	xcb_connection_t *con;
 	const xcb_screen_t *scr;
@@ -75,7 +75,7 @@ public:
 	static void flush() { xcb_flush(instance().con); }
 	
 	static void recycle(std::thread* pGarbage) { instance().garbages.push_back(pGarbage); }
-	static void register_dialog(container* pDialog, xcb_window_t pWindow) { instance().dialogs.insert({pWindow, pDialog}); }
+	static void register_dialog(base_dialog* pDialog, xcb_window_t pWindow) { instance().dialogs.insert({pWindow, pDialog}); }
 	
 	static xcb_connection_t *connection() { return instance().con; }
 	static const xcb_screen_t *screen() { return instance().scr; }

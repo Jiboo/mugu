@@ -17,13 +17,13 @@
 
 #include "mugu/defines.hpp"
 #include "mugu/context.hpp"
-#include "mugu/widget.hpp"
+#include "mugu/base_dialog.hpp"
 
 namespace mugu
 {
 
 template<class tContainer>
-class dialog : public tContainer, public virtual widget
+class dialog : public tContainer, public base_dialog
 {
 protected:
 	std::string title;
@@ -38,7 +38,7 @@ public:
 	dialog() : tContainer()
 	{
 		this->parent = nullptr;
-		this->root = dynamic_cast<container*>(this);
+		this->root = dynamic_cast<base_dialog*>(this);
 	
 		this->window = xcb_generate_id(context::connection());
 		this->width = 150;
@@ -68,7 +68,7 @@ public:
 			context::screen()->root_visual,
 			mask, values);
 	
-		context::register_dialog(dynamic_cast<container*>(this), this->window);
+		context::register_dialog(dynamic_cast<base_dialog*>(this), this->window);
 	}
 
 	virtual ~dialog()

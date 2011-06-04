@@ -19,7 +19,7 @@
 namespace mugu
 {
 
-class flexgrid : public container
+class flexgrid : public virtual container
 {
 protected:
 	std::vector<unsigned> rows;

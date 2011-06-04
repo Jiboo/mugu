@@ -16,7 +16,7 @@
 namespace mugu
 {
 
-class grid : public container
+class grid : public virtual container
 {
 public:
 	MUGU_PROP(, get, unsigned, rows);
