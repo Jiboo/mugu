@@ -33,24 +33,8 @@ protected:
 	const xcb_setup_t *set;
 
 public:
-	context()
-	{
-		this->con = xcb_connect(NULL, NULL);
-		this->set = xcb_get_setup(this->con);
-        xcb_screen_iterator_t iter = xcb_setup_roots_iterator(this->set);
-        this->scr = iter.data;
-        
-        this->garbages.push_back(new std::thread(&context::event_pump, this));
-	}
-	
-	~context()
-	{
-		xcb_disconnect(this->con);
-		#ifndef NDEBUG
-			cairo_debug_reset_static_data();
-			FcFini();
-		#endif
-	}
+	context();
+	~context();
 
 public:
 	void event_pump();
@@ -61,16 +45,7 @@ public:
 		return singleton; 
 	}
 	
-	static void clean()
-	{
-		for(std::thread *garbage : instance().garbages)
-		{
-			if(garbage->joinable())
-				garbage->join();
-			delete garbage;
-		}
-		instance().garbages.clear();
-	}
+	static void clean();
 	
 	static void flush() { xcb_flush(instance().con); }
 	

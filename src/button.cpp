@@ -51,6 +51,24 @@ button::button(std::string pText)
 	this->border_clicked_left_source = new source_rgba(0, 0.5, 0, 1);
 }
 
+button::~button()
+{
+	delete this->text_source;
+
+	delete this->background_source;
+	delete this->background_clicked_source;
+
+	delete this->border_top_source;
+	delete this->border_right_source;
+	delete this->border_bottom_source;
+	delete this->border_left_source;
+
+	delete this->border_clicked_top_source;
+	delete this->border_clicked_right_source;
+	delete this->border_clicked_bottom_source;
+	delete this->border_clicked_left_source;
+}
+
 void button::draw(cairo_t* pContext)
 {
 	{ // Background

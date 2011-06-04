@@ -55,26 +55,7 @@ public:
 	MUGU_PROP(, has, bool, focus);
 
 public:
-	widget()
-	{
-		this->width = 0;
-		this->height = 0;
-		this->top = 0;
-		this->left = 0;
-		
-		this->halign = ALIGN_LEFT;
-		this->valign = ALIGN_TOP;
-
-		this->set_border_size(0);
-		this->set_border_style(BORDER_STYLE_NONE);
-		
-		this->set_margin(0);
-		this->set_padding(0);
-
-		this->visible = true;
-		this->enabled = true;
-		this->focus = false;
-	}
+	widget();
 	
 	virtual ~widget() {}
 

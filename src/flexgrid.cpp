@@ -13,6 +13,18 @@
 namespace mugu
 {
 
+flexgrid::flexgrid(std::initializer_list<std::initializer_list<widget*>> pChildren)
+{
+	this->rows.assign(pChildren.size(), 0);
+	this->cols.assign((*(pChildren.begin())).size(), 0);
+
+	for(std::initializer_list<widget*> row : pChildren)
+	{
+		for(widget* col : row)
+			this->add(col);
+	}
+}
+
 void flexgrid::layout()
 {
 	unsigned w = 0, h = 0, r, c;

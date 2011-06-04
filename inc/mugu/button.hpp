@@ -32,10 +32,7 @@ public:
 
 public:
 	button(std::string pText);
-	
-	virtual ~button()
-	{
-	}
+	virtual ~button();
 	
 public:
 	

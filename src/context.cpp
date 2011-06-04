@@ -7,12 +7,31 @@
  * Mugu is licensed under a Creative Commons Attribution 3.0 Unported License
  * http://creativecommons.org/licenses/by/3.0/
  */
- 
+
 #include "mugu/context.hpp"
 #include "mugu/base_dialog.hpp"
 
 namespace mugu
 {
+
+context::context()
+{
+	this->con = xcb_connect(NULL, NULL);
+	this->set = xcb_get_setup(this->con);
+    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(this->set);
+    this->scr = iter.data;
+    
+    this->garbages.push_back(new std::thread(&context::event_pump, this));
+}
+
+context::~context()
+{
+	xcb_disconnect(this->con);
+	#ifndef NDEBUG
+		cairo_debug_reset_static_data();
+		FcFini();
+	#endif
+}
 
 void context::event_pump()
 {
@@ -77,6 +96,17 @@ xcb_visualtype_t *context::root_visualtype()
 	}
 
 	return visual_type;
+}
+
+void context::clean()
+{
+	for(std::thread *garbage : instance().garbages)
+	{
+		if(garbage->joinable())
+			garbage->join();
+		delete garbage;
+	}
+	instance().garbages.clear();
 }
 
 } //namespace mugu

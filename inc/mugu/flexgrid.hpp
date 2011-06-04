@@ -31,17 +31,7 @@ public:
 	{
 	}
 
-	flexgrid(std::initializer_list<std::initializer_list<widget*>> pChildren)
-	{
-		this->rows.assign(pChildren.size(), 0);
-		this->cols.assign((*(pChildren.begin())).size(), 0);
-
-		for(std::initializer_list<widget*> row : pChildren)
-		{
-			for(widget* col : row)
-				this->add(col);
-		}
-	}
+	flexgrid(std::initializer_list<std::initializer_list<widget*>> pChildren);
 
 	virtual ~flexgrid() {}
 

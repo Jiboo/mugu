@@ -31,17 +31,7 @@ public:
 		this->cols = pCols;
 	}
 
-	grid(std::initializer_list<std::initializer_list<widget*>> pChildren)
-	{
-		this->rows = pChildren.size();
-		this->cols = (*(pChildren.begin())).size();
-
-		for(std::initializer_list<widget*> row : pChildren)
-		{
-			for(widget* col : row)
-				this->add(col);
-		}
-	}
+	grid(std::initializer_list<std::initializer_list<widget*>> pChildren);
 
 	virtual ~grid() {}
 
