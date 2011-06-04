@@ -18,8 +18,15 @@ namespace mugu
 void base_dialog::__handle_button(unsigned pLeft, unsigned pTop, bool pClicked)
 {
 	clickable* cli = get_widget(this, pLeft, pTop);
-	if(cli)
+	
+	if(!pClicked && cli != this->focused && this->focused != nullptr)
+		this->focused->__click_final();
+	
+	if(cli != nullptr)
+	{
+		this->focused = cli;
 		cli->__handle_button(pLeft, pTop, pClicked);
+	}
 }
 
 clickable* base_dialog::get_widget(container *pContainer, unsigned pLeft, unsigned pTop)

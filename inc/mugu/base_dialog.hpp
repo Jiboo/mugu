@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "mugu/widget.hpp"
+#include "mugu/clickable.hpp"
 #include "mugu/container.hpp"
 
 namespace mugu
@@ -19,9 +19,14 @@ namespace mugu
 class base_dialog : public virtual container
 {
 public:	
-	widget* focused;
+	clickable* focused;
 
 public:
+	base_dialog()
+		: focused(nullptr)
+	{
+	}
+
 	virtual ~base_dialog()
 	{
 	}
