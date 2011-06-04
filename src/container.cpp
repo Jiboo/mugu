@@ -30,20 +30,12 @@ void container::draw(cairo_t* pContext)
 
 void container::__handle_button(unsigned pLeft, unsigned pTop, bool pClicked)
 {
-	clickable* cli = get_button_widget(this, pLeft, pTop);
+	clickable* cli = get_widget(this, pLeft, pTop);
 	if(cli)
-	{
-		if(pClicked)
-		{
-			cli->set_clicked(true);
-			cli->redraw();
-		}
-		else
-			cli->event_click.fire(pLeft, pTop);
-	}
+		cli->__handle_button(pLeft, pTop, pClicked);
 }
 
-clickable* container::get_button_widget(container *pContainer, unsigned pLeft, unsigned pTop)
+clickable* container::get_widget(container *pContainer, unsigned pLeft, unsigned pTop)
 {
 	for(widget* child : pContainer->children)
 	{
@@ -59,7 +51,7 @@ clickable* container::get_button_widget(container *pContainer, unsigned pLeft, u
 			if(con)
 			{
 				if(con->contains(pLeft, pTop))
-					return this->get_button_widget(con, pLeft, pTop);
+					return this->get_widget(con, pLeft, pTop);
 			}
 		}
 	}

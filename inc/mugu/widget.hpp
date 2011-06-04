@@ -23,18 +23,23 @@
 namespace mugu
 {
 
+class container;
+
 class widget
 {
 	friend class container;
 
 protected:
 	widget* parent;
+	container* root;
 
 public:
 	MUGU_PROP(virtual, get, unsigned, width);
 	MUGU_PROP(virtual, get, unsigned, height);
 	MUGU_PROP(, get, unsigned, top);
 	MUGU_PROP(, get, unsigned, left);
+	MUGU_PROP(, get, align, halign);
+	MUGU_PROP(, get, align, valign);
 
 	MUGU_STYLE_DIRECTIONS(unsigned, border_size);
 	MUGU_STYLE_DIRECTIONS(border_style, border_style);
@@ -56,6 +61,9 @@ public:
 		this->height = 0;
 		this->top = 0;
 		this->left = 0;
+		
+		this->halign = ALIGN_LEFT;
+		this->valign = ALIGN_TOP;
 
 		this->set_border_size(0);
 		this->set_border_style(BORDER_STYLE_NONE);
@@ -80,8 +88,8 @@ public:
 		this->height = pHeight;
 	}
 	
-	virtual void refresh() {}
-	virtual void redraw() {}
+	virtual void refresh();
+	virtual void redraw();
 	
 	virtual void draw(cairo_t*) {}
 	virtual void invalidates(unsigned, unsigned, unsigned, unsigned) {}
@@ -89,19 +97,19 @@ public:
 public:
 	unsigned get_marginbox_offset_left() { return this->left; }
 	unsigned get_marginbox_offset_top() { return this->top; }
-	unsigned get_marginbox_width() { return this->get_borderbox_width() + this->margin_top + this->margin_bottom; }
+	unsigned get_marginbox_width() { return this->get_borderbox_width() + this->margin_left + this->margin_right; }
 	unsigned get_marginbox_height() { return this->get_borderbox_height() + this->margin_top + this->margin_bottom; }
 	void set_marginbox_width(unsigned pWidth) { this->set_width(pWidth - this->margin_left - this->margin_right - this->border_size_left - this->border_size_right - this->padding_left - this->padding_right); }
 	void set_marginbox_height(unsigned pHeight) { this->set_height(pHeight - this->margin_top - this->margin_bottom - this->border_size_top - this->border_size_bottom - this->padding_top - this->padding_bottom); }
 
 	unsigned get_borderbox_offset_left() { return get_marginbox_offset_left() + this->margin_left; }
 	unsigned get_borderbox_offset_top() { return get_marginbox_offset_top() + this->margin_top; }
-	unsigned get_borderbox_width() { return this->get_paddingbox_width() + this->border_size_top + this->border_size_bottom; }
+	unsigned get_borderbox_width() { return this->get_paddingbox_width() + this->border_size_left + this->border_size_right; }
 	unsigned get_borderbox_height() { return this->get_paddingbox_height() + this->border_size_top + this->border_size_bottom; }
 
 	unsigned get_paddingbox_offset_left() { return get_borderbox_offset_left() +  this->border_size_left; }
 	unsigned get_paddingbox_offset_top() { return get_borderbox_offset_top() + this->border_size_top; }
-	unsigned get_paddingbox_width() { return get_contentbox_width() + this->padding_top + this->padding_bottom; }
+	unsigned get_paddingbox_width() { return get_contentbox_width() + this->padding_left + this->padding_right; }
 	unsigned get_paddingbox_height() { return get_contentbox_height() + this->padding_top + this->padding_bottom; }
 
 	unsigned get_contentbox_offset_left() { return get_paddingbox_offset_left() + this->padding_left; }

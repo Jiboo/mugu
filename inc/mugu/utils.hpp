@@ -1,5 +1,5 @@
 /*
- * widget.cpp
+ * utils.hpp
  * This file is part of Mugu
  *
  * Copyright (C) 2011 - LEPESME "Jiboo" Jean-Baptiste
@@ -8,21 +8,15 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
 
-#include "mugu/widget.hpp"
-#include "mugu/container.hpp"
+#pragma once
+
+#include <string>
+#include <functional>
+#include <cairo/cairo.h>
 
 namespace mugu
 {
 
-void widget::refresh()
-{
-	this->root->refresh(this);
-}
-
-void widget::redraw()
-{
-	this->root->redraw(this);
-}
+cairo_text_extents_t get_text_extents(std::function<void(cairo_t*)> pSelect, std::string &pString);
 
 } // namespace mugu
-

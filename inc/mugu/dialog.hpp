@@ -38,6 +38,7 @@ public:
 	dialog() : tContainer()
 	{
 		this->parent = nullptr;
+		this->root = dynamic_cast<container*>(this);
 	
 		this->window = xcb_generate_id(context::connection());
 		this->width = 150;
@@ -154,6 +155,23 @@ public:
 			this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->get_marginbox_width(), this->get_marginbox_height());
 			this->layout();
 		}
+	}
+	
+	virtual void redraw(widget *pWidget)
+	{
+		cairo_t *ctx = cairo_create(this->cache);
+		pWidget->draw(ctx);
+		cairo_destroy(ctx);
+		this->refresh(pWidget);
+	}
+
+	virtual void refresh(widget *pWidget)
+	{
+		cairo_t *ctx = cairo_create(this->surface);
+		cairo_set_source_surface(ctx, this->cache, 0, 0);
+		cairo_rectangle(ctx, pWidget->get_marginbox_offset_left(), pWidget->get_marginbox_offset_top(), pWidget->get_marginbox_width(), pWidget->get_marginbox_height());
+		cairo_fill(ctx);
+		cairo_destroy(ctx);
 	}
 
 public:

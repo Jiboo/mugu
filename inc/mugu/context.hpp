@@ -14,6 +14,8 @@
 #include <map>
 #include <thread>
 #include <xcb/xcb.h>
+#include <cairo/cairo.h>
+#include <fontconfig/fontconfig.h>
 
 namespace mugu
 {
@@ -44,6 +46,10 @@ public:
 	~context()
 	{
 		xcb_disconnect(this->con);
+		#ifndef NDEBUG
+			cairo_debug_reset_static_data();
+			FcFini();
+		#endif
 	}
 
 public:

@@ -25,4 +25,5 @@
 			#include "mugu/vbox.hpp"
 	#include "mugu/dialog.hpp"
 	#include "mugu/clickable.hpp"
+		#include "mugu/button.hpp"
 

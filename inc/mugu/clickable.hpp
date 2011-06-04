@@ -21,9 +21,10 @@ class clickable : public widget
 public:
 	MUGU_PROP(, is, bool, clicked);
 	event<unsigned, unsigned> event_click;
-	
-	clickable(std::function<void(void)> pFinal)
-		: event_click(pFinal)
+
+public:
+	clickable()
+		: clicked(false), event_click(std::bind(&clickable::__click_final, this))
 	{
 		this->event_click.connect(std::bind(&clickable::on_click, this, std::placeholders::_1, std::placeholders::_2));
 	}
@@ -31,8 +32,13 @@ public:
 	virtual ~clickable()
 	{
 	}
-	
+
+public:
 	virtual void on_click(unsigned, unsigned) {}
+
+	virtual void __handle_button(unsigned pWidth, unsigned pHeight, bool pClicked);
+	virtual void __click_final();
 };
 
 } // namespace mugu
+

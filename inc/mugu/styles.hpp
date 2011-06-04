@@ -112,12 +112,11 @@ enum font_decoration
 	font_style pName##_style; \
 	font_weight pName##_weight; \
 	char *pName##_font; \
-	align pName##_halign; \
-	align pName##_valign; \
-	void select_##pName##_text_style(cairo_t* pContext) \
+	void select_##pName##_style(cairo_t* pContext) \
 	{ \
 		cairo_select_font_face(pContext, pName##_font, (cairo_font_slant_t)pName##_style, (cairo_font_weight_t)pName##_weight); \
 		cairo_set_font_size(pContext, pName##_size); \
+		pName##_source->select(pContext); \
 	}
 
 } // namespace mugu

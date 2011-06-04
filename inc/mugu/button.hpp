@@ -12,6 +12,7 @@
 
 #include <string>
 
+#include "mugu/styles.hpp"
 #include "mugu/clickable.hpp"
 
 namespace mugu
@@ -19,10 +20,26 @@ namespace mugu
 
 class button : public clickable
 {
+protected:
+	cairo_text_extents_t extents;
+
 public:
 	MUGU_PROP(, set, std::string, text);
+	MUGU_STYLE_TEXT(text);
 	
+	MUGU_STYLE_SOURCE(background_clicked);
+	MUGU_STYLE_SOURCE_DIRECTIONS(border_clicked);
+
+public:
+	button(std::string pText);
 	
+	virtual ~button()
+	{
+	}
+	
+public:
+	
+	virtual void draw(cairo_t* pContext);
 };
 
 } // namespace mugu

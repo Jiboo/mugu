@@ -52,15 +52,20 @@ public:
 	
 	virtual void __configure_notify(unsigned, unsigned) {}
 	virtual void __handle_button(unsigned pLeft, unsigned pTop, bool pClicked);
+	
+	virtual void redraw(widget *) {}
+	virtual void refresh(widget *) {}
 
 public:
 	void add(widget* pChild)
 	{
 		pChild->parent = this;
+		pChild->root = this->root;
+		
 		this->children.push_back(pChild);
 	}
 	
-	clickable* get_button_widget(container *pContainer, unsigned pLeft, unsigned pTop);
+	clickable* get_widget(container *pContainer, unsigned pLeft, unsigned pTop);
 };
 
 } // namespace mugu

@@ -1,7 +1,7 @@
 # Mugu by LEPESME "Jiboo" Jean-Baptiste is licensed under a Creative Commons Attribution 3.0 Unported License
 # http://creativecommons.org/licenses/by/3.0/
 
-CXX=g++
+CXX=g++-svn
 CXXFLAGS=-I/usr/local/include -D_GLIBCXX_USE_SCHED_YIELD -D_GLIBCXX_USE_NANOSLEEP
 LDFLAGS=-Wl,-rpath -Wl,/usr/local/lib
 DEBUG=yes

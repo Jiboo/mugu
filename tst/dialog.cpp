@@ -9,7 +9,6 @@
  */
 
 #include "mugu.hpp"
-#include "mugu/random.hpp"
 
 using namespace mugu;
 
@@ -25,10 +24,10 @@ int main(int, char**)
 	d1->set_cols(1);
 	d1->set_title("Coucou lol");
 	
-	random_widget *r1 = new random_widget();
-	random_widget *r2 = new random_widget();
-	random_widget *r3 = new random_widget();
-	random_widget *r4 = new random_widget();
+	button *r1 = new button("r{g1");
+	button *r2 = new button("r{g2");
+	button *r3 = new button("r{g3");
+	button *r4 = new button("r{g4");
 	
 	d1->add(r1);
 	d1->add(r2);
