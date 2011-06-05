@@ -12,6 +12,7 @@
 
 #include <chrono>
 #include <functional>
+#include <iostream>
 
 #include <cairo/cairo.h>
 
@@ -28,14 +29,16 @@ class base_dialog;
 class widget
 {
 	friend class container;
+	friend class source_gradient;
 
 protected:
 	widget* parent;
 	base_dialog* root;
+	
+	unsigned width;
+	unsigned height;
 
 public:
-	MUGU_PROP(virtual, get, unsigned, width);
-	MUGU_PROP(virtual, get, unsigned, height);
 	MUGU_PROP(, get, unsigned, top);
 	MUGU_PROP(, get, unsigned, left);
 	MUGU_PROP(, get, align, halign);
@@ -62,6 +65,16 @@ public:
 public:
 	virtual void layout() {}
 	virtual void adapt() {}
+	
+	virtual void set_width(unsigned pWidth)
+	{
+		this->width = pWidth;
+	}
+	
+	virtual void set_height(unsigned pHeight)
+	{
+		this->height = pHeight;
+	}
 	
 	virtual void set_size(unsigned pWidth, unsigned pHeight)
 	{

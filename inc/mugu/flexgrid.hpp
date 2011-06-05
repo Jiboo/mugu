@@ -11,7 +11,6 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
 
 #include "mugu/container.hpp"
 #include "mugu/defines.hpp"
@@ -26,6 +25,8 @@ protected:
 	std::vector<unsigned> cols;
 
 public:
+	flexgrid() {}
+
 	flexgrid(unsigned pRows, unsigned pCols)
 		: rows(pRows, 0), cols(pCols, 0)
 	{
@@ -38,6 +39,10 @@ public:
 public:
 	virtual void adapt();
 	virtual void layout();
+
+public:
+	void set_rows(unsigned pRows) { this->rows.assign(pRows, 0); }
+	void set_cols(unsigned pCols) { this->cols.assign(pCols, 0); }
 };
 
 } // namespace mugu

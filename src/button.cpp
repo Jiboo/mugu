@@ -23,7 +23,7 @@ button::button(std::string pText)
 	this->text_size = 8;
 	this->text_style = FONT_STYLE_NORMAL;
 	this->text_weight = FONT_WEIGHT_NORMAL;
-	this->text_font = "Sans";
+	this->text_font = (char*)"Sans";
 	this->text_source = new source_rgba(1, 1, 1, 1);
 	
 	this->extents = get_text_extents(std::bind(&button::select_text_style, this, std::placeholders::_1), pText);
@@ -37,18 +37,18 @@ button::button(std::string pText)
 	this->set_padding(2, 6);
 	this->set_border_size(2);
 	
-	this->background_source = new source_rgba(1, 0, 0, 1);
-	this->background_clicked_source = new source_rgba(0.5, 0, 0, 1);
+	this->background_source = new source_rgba(168/255., 168/255., 168/255., 1);
+	this->background_clicked_source = new source_rgba(128/255., 128/255., 128/255., 1);
 	
-	this->border_top_source = new source_rgba(0, 1, 0, 1);
-	this->border_right_source = new source_rgba(0, 1, 0, 1);
-	this->border_bottom_source = new source_rgba(0, 1, 0, 1);
-	this->border_left_source = new source_rgba(0, 1, 0, 1);
+	this->border_top_source = new source_rgba(192/255., 192/255., 192/255., 1);
+	this->border_right_source = new source_rgba(96/255., 96/255., 96/255., 1);
+	this->border_bottom_source = new source_rgba(96/255., 96/255., 96/255., 1);
+	this->border_left_source = new source_rgba(192/255., 192/255., 192/255., 1);
 	
-	this->border_clicked_top_source = new source_rgba(0, 0.5, 0, 1);
-	this->border_clicked_right_source = new source_rgba(0, 0.5, 0, 1);
-	this->border_clicked_bottom_source = new source_rgba(0, 0.5, 0, 1);
-	this->border_clicked_left_source = new source_rgba(0, 0.5, 0, 1);
+	this->border_clicked_top_source = new source_rgba(96/255., 96/255., 96/255., 1);
+	this->border_clicked_right_source = new source_rgba(192/255., 192/255., 192/255., 1);
+	this->border_clicked_bottom_source = new source_rgba(192/255., 192/255., 192/255., 1);
+	this->border_clicked_left_source = new source_rgba(96/255., 96/255., 96/255., 1);
 }
 
 button::~button()

@@ -43,6 +43,8 @@ public:
 		this->window = xcb_generate_id(context::connection());
 		this->width = 150;
 		this->height = 150;
+		
+		this->background_source = new source_rgba(168/255., 168/255., 168/255., 1);
 
 		this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->get_marginbox_width(), this->get_marginbox_height());
 		this->surface = cairo_xcb_surface_create(context::connection(), this->window, context::root_visualtype(), this->get_marginbox_width(), this->get_marginbox_height());
@@ -77,6 +79,8 @@ public:
 		xcb_destroy_window(context::connection(), this->window);
 		cairo_surface_destroy(this->surface);
 		cairo_surface_destroy(this->cache);
+		
+		delete this->background_source;
 	}
 
 public:

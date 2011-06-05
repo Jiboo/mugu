@@ -13,6 +13,8 @@
 #include <cairo/cairo.h>
 
 #include "mugu/source.hpp"
+#include "mugu/source_rgba.hpp"
+#include "mugu/source_png.hpp"
 
 namespace mugu
 {
@@ -75,9 +77,7 @@ enum font_decoration
 	public: void set_##pName##_rgba(double pR, double pG, double pB, double pA = 1) \
 	{ delete this->pName##_source; this->pName##_source = new source_rgba(pR, pG, pB, pA); } \
 	void set_##pName##_png(const char* pPath) \
-	{ delete this->pName##_source; this->pName##_source = new source_png(pPath); } \
-	void set_##pName##_gradient(double pX0, double pY0, double pX1, double pY1, std::initializer_list<gradient_color_stop> pStops) \
-	{ delete this->pName##_source; this->pName##_source = new source_gradient(pX0, pY0, pX1, pY1, pStops); }
+	{ delete this->pName##_source; this->pName##_source = new source_png(pPath); }
 	
 #define MUGU_STYLE_SOURCE_DIRECTIONS(pName) \
 	MUGU_STYLE_SOURCE(pName##_top); \
@@ -97,13 +97,6 @@ enum font_decoration
 		delete this->pName##_right_source; this->pName##_right_source = new source_png(pPath); \
 		delete this->pName##_bottom_source; this->pName##_bottom_source = new source_png(pPath); \
 		delete this->pName##_left_source; this->pName##_left_source = new source_png(pPath); \
-	} \
-	void set_##pName##_gradient(double pX0, double pY0, double pX1, double pY1, std::initializer_list<gradient_color_stop> pStops) \
-	{ \
-		delete this->pName##_top_source; this->pName##_top_source = new source_gradient(pX0, pY0, pX1, pY1, pStops); \
-		delete this->pName##_right_source; this->pName##_right_source = new source_gradient(pX0, pY0, pX1, pY1, pStops); \
-		delete this->pName##_bottom_source; this->pName##_bottom_source = new source_gradient(pX0, pY0, pX1, pY1, pStops); \
-		delete this->pName##_left_source; this->pName##_left_source = new source_gradient(pX0, pY0, pX1, pY1, pStops); \
 	}
 
 #define MUGU_STYLE_TEXT(pName) \

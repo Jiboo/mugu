@@ -39,9 +39,9 @@ void grid::adapt()
 
 	this->set_size((max_width * cols) + (this->cols - 1) * this->hgap, (max_height * rows) + (this->rows - 1) * this->vgap);
 	
-	if(this->parent != nullptr)
+	/*if(this->parent != nullptr)
 		parent->layout();
-	this->layout();
+	this->layout();*/
 }
 
 void grid::layout()

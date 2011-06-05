@@ -17,6 +17,10 @@ namespace mugu
 
 void container::draw(cairo_t* pContext)
 {
+	this->background_source->select(pContext);
+	cairo_rectangle(pContext, this->get_paddingbox_offset_left(), this->get_paddingbox_offset_top(), this->get_paddingbox_width(), this->get_paddingbox_height());
+	cairo_fill(pContext);
+
 	if(this->visible)
 	{
 		for(widget* child : children)

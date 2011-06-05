@@ -38,7 +38,7 @@ int main(int, char**)
 	
 	d1->adapt();
 
-	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)800, std::chrono::seconds(3));
+	//d1->anim(&dialog_t::set_width, d1->get_contentbox_width(), (unsigned)800, std::chrono::seconds(3));
 	
 	//r1->anim(&button::set_width, r1->get_width(), (unsigned)800, std::chrono::seconds(3));
 	
