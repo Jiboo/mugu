@@ -48,8 +48,8 @@ void flexgrid::adapt()
 	for(unsigned row : rows)
 		h += row;
 
-	this->width = w + (this->cols.size() - 1) * this->hgap;
-	this->height = h + (this->rows.size() - 1) * this->vgap;
+	this->set_contentbox_width(w + (this->cols.size() - 1) * this->hgap);
+	this->set_contentbox_height(h + (this->rows.size() - 1) * this->vgap);
 }
 
 void flexgrid::layout()

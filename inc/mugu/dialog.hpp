@@ -44,6 +44,7 @@ public:
 		this->width = 150;
 		this->height = 150;
 		
+		this->set_padding(5);
 		this->background_source = new source_rgba(168/255., 168/255., 168/255., 1);
 
 		this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->get_marginbox_width(), this->get_marginbox_height());
@@ -83,6 +84,21 @@ public:
 		delete this->background_source;
 	}
 
+protected:
+	virtual void set_width(unsigned pWidth)
+	{
+		uint32_t temp = pWidth + this->margin_left + this->margin_right + this->border_size_left + this->border_size_right + this->padding_left + this->padding_right;
+		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_WIDTH, &temp);
+		context::flush();
+	}
+	
+	virtual void set_height(unsigned pHeight)
+	{
+		uint32_t temp = pHeight + this->margin_top + this->margin_bottom + this->border_size_top + this->border_size_bottom + this->padding_top + this->padding_bottom;
+		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_HEIGHT, &temp);
+		context::flush();
+	}
+
 public:
 	virtual void set_visible(bool pVisible)
 	{
@@ -93,28 +109,7 @@ public:
 			xcb_unmap_window(context::connection(), this->window);
 		context::flush();
 	}
-	
-	virtual void set_width(unsigned pWidth)
-	{
-		uint32_t temp = pWidth;
-		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_WIDTH, &temp);
-		context::flush();
-	}
-	
-	virtual void set_height(unsigned pHeight)
-	{
-		uint32_t temp = pHeight;
-		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_HEIGHT, &temp);
-		context::flush();
-	}
-	
-	virtual void set_size(unsigned pWidth, unsigned pHeight)
-	{	
-		uint32_t temp[2] = {pWidth, pHeight};
-		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, temp);
-		context::flush();
-	}
-	
+
 	virtual void invalidates(unsigned pLeft, unsigned pTop, unsigned pWidth, unsigned pHeight)
 	{
 		cairo_t *ctx = cairo_create(this->surface);
@@ -150,8 +145,8 @@ public:
 	{
 		if(pWidth != this->width || pHeight != this->height)
 		{
-			this->width = pWidth;
-			this->height = pHeight;
+			this->width = pWidth - this->margin_left - this->margin_right - this->border_size_left - this->border_size_right - this->padding_left - this->padding_right;
+			this->height = pHeight - this->margin_top - this->margin_bottom - this->border_size_top - this->border_size_bottom - this->padding_top - this->padding_bottom;
 			
 			cairo_xcb_surface_set_size(this->surface, this->get_marginbox_width(), this->get_marginbox_height());
 			

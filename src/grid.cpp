@@ -37,17 +37,18 @@ void grid::adapt()
 		max_height = std::max(max_height, child->get_marginbox_height());
 	}
 
-	this->set_size((max_width * cols) + (this->cols - 1) * this->hgap, (max_height * rows) + (this->rows - 1) * this->vgap);
+	this->set_contentbox_width((max_width * cols) + (this->cols - 1) * this->hgap);
+	this->set_contentbox_height((max_height * rows) + (this->rows - 1) * this->vgap);
 	
-	/*if(this->parent != nullptr)
+	if(this->parent != nullptr)
 		parent->layout();
-	this->layout();*/
+	this->layout();
 }
 
 void grid::layout()
 {
-	unsigned max_width = (this->width - (this->cols - 1) * this->hgap) / cols;
-	unsigned max_height = (this->height - (this->rows - 1) * this->vgap) / rows;
+	unsigned max_width = (this->get_contentbox_width() - (this->cols - 1) * this->hgap) / cols;
+	unsigned max_height = (this->get_contentbox_height() - (this->rows - 1) * this->vgap) / rows;
 
 	unsigned offset_left = this->get_contentbox_offset_left();
 	unsigned offset_top = this->get_contentbox_offset_top();

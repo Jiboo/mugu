@@ -62,10 +62,7 @@ public:
 	
 	virtual ~widget() {}
 
-public:
-	virtual void layout() {}
-	virtual void adapt() {}
-	
+protected:
 	virtual void set_width(unsigned pWidth)
 	{
 		this->width = pWidth;
@@ -75,13 +72,11 @@ public:
 	{
 		this->height = pHeight;
 	}
-	
-	virtual void set_size(unsigned pWidth, unsigned pHeight)
-	{
-		this->width = pWidth;
-		this->height = pHeight;
-	}
-	
+
+public:
+	virtual void layout() {}
+	virtual void adapt() {}
+
 	virtual void refresh();
 	virtual void redraw();
 	
