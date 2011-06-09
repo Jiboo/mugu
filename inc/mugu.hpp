@@ -25,4 +25,4 @@
 	#include "mugu/label.hpp"
 	#include "mugu/clickable.hpp"
 		#include "mugu/button.hpp"
-
+#include "mugu/gio.hpp"

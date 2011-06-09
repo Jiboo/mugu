@@ -52,13 +52,15 @@ public:
 public:
 	void redraw(widget *pWidget);
 	void refresh(widget *pWidget);
+	
+	void close();
+	
+	std::string &get_title() { return this->title; }
+	void set_title(std::string pTitle);
 
 	void __handle_button(unsigned pLeft, unsigned pTop, bool pClicked);
 	void __configure_notify(unsigned pWidth, unsigned pHeight);
 	void __handle_close_request();
-	
-	std::string &get_title() { return this->title; }
-	void set_title(std::string pTitle);
 	
 protected:
 	clickable* get_widget(container *pContainer, unsigned pLeft, unsigned pTop);

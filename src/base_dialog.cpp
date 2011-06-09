@@ -8,6 +8,7 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
 
+#include <cstring>
 #include <xcb/xcb_atom.h>
 #include <xcb/xcb_icccm.h>
 #include <cairo/cairo-xcb.h>
@@ -79,6 +80,7 @@ void base_dialog::redraw()
 	cairo_t *ctx = cairo_create(this->cache);
 	this->draw(ctx);
 	cairo_destroy(ctx);
+	
 	this->refresh();
 }
 
@@ -87,6 +89,7 @@ void base_dialog::redraw(widget *pWidget)
 	cairo_t *ctx = cairo_create(this->cache);
 	pWidget->draw(ctx);
 	cairo_destroy(ctx);
+	
 	this->refresh(pWidget);
 }
 
@@ -141,6 +144,24 @@ void base_dialog::set_title(std::string pTitle)
 	context::flush();
 }
 
+void base_dialog::close()
+{
+	// Simulate a wm close
+	xcb_client_message_event_t ev;
+
+	memset(&ev, 0, sizeof(xcb_client_message_event_t));
+
+	ev.response_type = XCB_CLIENT_MESSAGE;
+	ev.window = this->window;
+	ev.type = xcb_atom_get(context::connection(), "WM_PROTOCOLS");
+	ev.format = 32;
+	ev.data.data32[0] = context::get_wm_delete_window_atom();
+	ev.data.data32[1] = XCB_CURRENT_TIME;
+	
+	xcb_send_event(context::connection(), false, this->window, XCB_EVENT_MASK_NO_EVENT, (char*)&ev);
+	xcb_flush(context::connection());
+}
+
 void base_dialog::__handle_button(unsigned pLeft, unsigned pTop, bool pClicked)
 {
 	clickable* cli = get_widget(this, pLeft, pTop);
@@ -161,11 +182,11 @@ void base_dialog::__configure_notify(unsigned pWidth, unsigned pHeight)
 	{
 		this->width = pWidth;
 		this->height = pHeight;
-		
+
 		cairo_xcb_surface_set_size(this->surface, this->width, this->height);
-		
 		cairo_surface_destroy(this->cache);
 		this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
+		
 		this->layout();
 	}
 }

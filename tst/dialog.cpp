@@ -42,13 +42,19 @@ int main(int, char**)
 	
 	d1->adapt();
 	
-	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)400, std::chrono::seconds(3));
+	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)400, std::chrono::seconds(1));
 	//r1->anim(&button::set_width, r1->get_width(), (unsigned)800, std::chrono::seconds(3));
 	
 	r1->event_click.connect([](unsigned, unsigned){ std::cout << "r1 clicked!" << std::endl; });
 	
+	d1->event_close.set_async(true);
+	d1->event_close.connect([]()
+	{
+		if(messagebox("Quit", "Do you really wanna quit?", {"Yes", "No"}) == 1)
+			throw event_stop();
+	});
+	
 	context::clean();
-
 	return 0;
 }
 

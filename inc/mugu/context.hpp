@@ -29,6 +29,7 @@ class context
 protected:
 	std::vector<std::thread*> garbages;
 	std::map<xcb_window_t, base_dialog*> dialogs;
+	std::thread* pump;
 	
 	xcb_connection_t *con;
 	const xcb_screen_t *scr;

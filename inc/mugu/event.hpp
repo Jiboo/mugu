@@ -62,7 +62,7 @@ public:
 	}
 };
 
-template<typename... tArgTypes>
+template<typename...tArgTypes>
 void event<tArgTypes...>::run(tArgTypes...pArgs)
 {
 	try

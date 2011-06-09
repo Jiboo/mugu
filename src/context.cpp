@@ -62,32 +62,44 @@ void context::event_pump()
 			case XCB_EXPOSE:
 			{
 				xcb_expose_event_t *e = (xcb_expose_event_t*)gen_e;
-				this->dialogs[e->window]->invalidates(e->x, e->y, e->width, e->height);
+				
+				if(this->dialogs.find(e->window) != this->dialogs.end())
+					this->dialogs[e->window]->invalidates(e->x, e->y, e->width, e->height);
 			} break;
 
 			case XCB_CONFIGURE_NOTIFY:
 			{
 				xcb_configure_notify_event_t *e = (xcb_configure_notify_event_t*)gen_e;
-				this->dialogs[e->window]->__configure_notify(e->width, e->height);
+				
+				if(this->dialogs.find(e->window) != this->dialogs.end())
+					this->dialogs[e->window]->__configure_notify(e->width, e->height);
 			} break;
 			
 			case XCB_BUTTON_PRESS:
 			{
 				xcb_button_press_event_t *e = (xcb_button_press_event_t*)gen_e;
-				this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, true);
+				
+				if(this->dialogs.find(e->event) != this->dialogs.end())
+					this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, true);
 			} break;
 			
 			case XCB_BUTTON_RELEASE:
 			{
 				xcb_button_release_event_t *e = (xcb_button_release_event_t*)gen_e;
-				this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, false);
+				
+				if(this->dialogs.find(e->event) != this->dialogs.end())
+					this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, false);
 			} break;
 			
 			case XCB_CLIENT_MESSAGE:
 			{
 				xcb_client_message_event_t* e = (xcb_client_message_event_t*)(gen_e);
-				if(e->data.data32[0] == this->wm_delete_window_atom)
-					this->dialogs[e->window]->__handle_close_request();
+				
+				if(this->dialogs.find(e->window) != this->dialogs.end())
+				{
+					if(e->data.data32[0] == this->wm_delete_window_atom)
+						this->dialogs[e->window]->__handle_close_request();
+				}
 			} break;
 
 			default:
@@ -125,6 +137,10 @@ xcb_visualtype_t *context::root_visualtype()
 
 void context::clean()
 {
+	flush();
+	if(instance().pump->joinable())
+		instance().pump->join();
+	delete instance().pump;
 	for(std::thread *garbage : instance().garbages)
 	{
 		if(garbage->joinable())
@@ -139,7 +155,7 @@ void context::register_dialog(base_dialog* pDialog, xcb_window_t pWindow)
 	instance().dialogs.insert({pWindow, pDialog});
 	if(instance().dialogs.size() == 1)
 	{
-		instance().garbages.push_back(new std::thread(&context::event_pump, &(instance())));
+		instance().pump = new std::thread(&context::event_pump, &(instance()));
 	}
 }
 
