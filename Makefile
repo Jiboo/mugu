@@ -45,7 +45,7 @@ lib/libmugu.a: $(OBJ)
 	@ echo Linked lib/libmugu.a
 
 tst/%.out: tst/%.cpp $(INC) lib/libmugu.a
-	$(HIDE) $(CXX) $(CXXFLAGS) $(LDFLAGS) -std=c++0x -Iinc -Llib $< -o $@ -lcairo -lxcb -lxcb-atom -lmugu
+	$(HIDE) $(CXX) $(CXXFLAGS) $(LDFLAGS) -std=c++0x -Iinc -Llib $< -o $@ -lcairo -lxcb -lxcb-atom -lxcb-icccm -lmugu
 	@ echo Compiled $@
 
 fixes:

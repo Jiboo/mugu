@@ -32,7 +32,7 @@ public:
 	virtual ~event_stop() throw() {}
 };
 
-template<typename... tArgTypes>
+template<typename...tArgTypes>
 class event
 {
 protected:

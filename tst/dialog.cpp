@@ -49,7 +49,6 @@ int main(int, char**)
 	
 	context::clean();
 
-	delete d1;
 	return 0;
 }
 

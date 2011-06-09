@@ -9,6 +9,7 @@
  */
 
 #include <xcb/xcb_atom.h>
+#include <xcb/xcb_icccm.h>
 #include <cairo/cairo-xcb.h>
 
 #include "mugu/base_dialog.hpp"
@@ -19,7 +20,7 @@ namespace mugu
 {
 
 base_dialog::base_dialog()
-	: focused(nullptr)
+	: focused(nullptr), event_close(std::bind(__close_final, this))
 {
 	this->parent = nullptr;
 	this->root = dynamic_cast<base_dialog*>(this);
@@ -51,6 +52,8 @@ base_dialog::base_dialog()
 		XCB_WINDOW_CLASS_INPUT_OUTPUT,
 		context::screen()->root_visual,
 		mask, values);
+
+	xcb_set_wm_protocols(context::connection(), xcb_atom_get(context::connection(), "WM_PROTOCOLS"), this->window, 1, &(context::get_wm_delete_window_atom()));
 
 	context::register_dialog(dynamic_cast<base_dialog*>(this), this->window);
 }
@@ -165,6 +168,18 @@ void base_dialog::__configure_notify(unsigned pWidth, unsigned pHeight)
 		this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
 		this->layout();
 	}
+}
+
+void base_dialog::__handle_close_request()
+{
+	this->event_close.fire();
+}
+
+void __close_final(base_dialog* pDialog)
+{
+	xcb_window_t win = pDialog->window;
+	delete pDialog;
+	context::unregister_dialog(win);
 }
 
 clickable* base_dialog::get_widget(container *pContainer, unsigned pLeft, unsigned pTop)

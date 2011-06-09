@@ -8,6 +8,9 @@
  * http://creativecommons.org/licenses/by/3.0/
  */
 
+#include <cstring>
+
+#include "mugu/debug.hpp"
 #include "mugu/context.hpp"
 #include "mugu/base_dialog.hpp"
 
@@ -20,12 +23,22 @@ context::context()
 {
 	this->con = xcb_connect(NULL, NULL);
 	this->set = xcb_get_setup(this->con);
-    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(this->set);
-    this->scr = iter.data;
-    
-    this->garbages.push_back(new std::thread(&context::event_pump, this));
-    
-    this->cur_theme = new theme_mugu;
+	xcb_screen_iterator_t iter = xcb_setup_roots_iterator(this->set);
+	this->scr = iter.data;
+	
+	#define REQUEST_ATOM(pName, pReceiver) { \
+		xcb_intern_atom_reply_t *r = xcb_intern_atom_reply(this->con, xcb_intern_atom(this->con, 0, strlen(pName), pName), NULL); \
+		MUGU_ASSERT(r, "Error while requesting atom " pName); \
+		this->pReceiver = r->atom; \
+		free(r); }
+		
+	REQUEST_ATOM("WM_DELETE_WINDOW", wm_delete_window_atom)
+	REQUEST_ATOM("UTF8_STRING", utf8_string_atom)
+	REQUEST_ATOM("_NET_WM_NAME", net_wm_name_atom)
+	
+	#undef REQUEST_ATOM
+	
+	this->cur_theme = new theme_mugu;
 }
 
 context::~context()
@@ -41,8 +54,9 @@ void context::event_pump()
 {
 	xcb_generic_event_t *gen_e;
 
-	while((gen_e = xcb_wait_for_event(this->con)))
+	while(!this->dialogs.empty())
 	{
+		gen_e = xcb_wait_for_event(this->con);
 		switch(gen_e->response_type & ~0x80)
 		{
 			case XCB_EXPOSE:
@@ -67,6 +81,13 @@ void context::event_pump()
 			{
 				xcb_button_release_event_t *e = (xcb_button_release_event_t*)gen_e;
 				this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, false);
+			} break;
+			
+			case XCB_CLIENT_MESSAGE:
+			{
+				xcb_client_message_event_t* e = (xcb_client_message_event_t*)(gen_e);
+				if(e->data.data32[0] == this->wm_delete_window_atom)
+					this->dialogs[e->window]->__handle_close_request();
 			} break;
 
 			default:
@@ -111,6 +132,15 @@ void context::clean()
 		delete garbage;
 	}
 	instance().garbages.clear();
+}
+
+void context::register_dialog(base_dialog* pDialog, xcb_window_t pWindow)
+{
+	instance().dialogs.insert({pWindow, pDialog});
+	if(instance().dialogs.size() == 1)
+	{
+		instance().garbages.push_back(new std::thread(&context::event_pump, &(instance())));
+	}
 }
 
 } //namespace mugu

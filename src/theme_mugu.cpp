@@ -18,7 +18,7 @@
 namespace mugu
 {
 
-void theme_mugu::draw(cairo_t* pContext, base_dialog* pDialog)
+void theme_mugu::draw(cairo_t* pContext, base_dialog*)
 {
 	utils::set_source(pContext, 62/255.);
 	cairo_paint(pContext);

@@ -17,6 +17,8 @@ namespace mugu
 
 #ifndef NDEBUG
 
+	void __print_stacktrace();
+
 	#define MUGU_ASSERT(pCond, pError) \
 		if(!pCond) \
 		{ \

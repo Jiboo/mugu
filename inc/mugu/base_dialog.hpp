@@ -13,6 +13,7 @@
 #include <string>
 #include <xcb/xcb.h>
 
+#include "mugu/event.hpp"
 #include "mugu/clickable.hpp"
 #include "mugu/container.hpp"
 
@@ -21,6 +22,8 @@ namespace mugu
 
 class base_dialog : public virtual container
 {
+	friend void __close_final(base_dialog* pDialog);
+
 public:	
 	clickable* focused;
 	
@@ -29,6 +32,8 @@ public:
 	
 	cairo_surface_t *surface;
 	cairo_surface_t *cache;
+	
+	event<> event_close;
 
 public:
 	base_dialog();
@@ -50,6 +55,7 @@ public:
 
 	void __handle_button(unsigned pLeft, unsigned pTop, bool pClicked);
 	void __configure_notify(unsigned pWidth, unsigned pHeight);
+	void __handle_close_request();
 	
 	std::string &get_title() { return this->title; }
 	void set_title(std::string pTitle);
@@ -57,6 +63,8 @@ public:
 protected:
 	clickable* get_widget(container *pContainer, unsigned pLeft, unsigned pTop);
 };
+
+void __close_final(base_dialog* pDialog);
 
 } // namespace mugu
 

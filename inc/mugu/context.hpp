@@ -34,6 +34,10 @@ protected:
 	const xcb_screen_t *scr;
 	const xcb_setup_t *set;
 	
+	xcb_atom_t wm_delete_window_atom;
+	xcb_atom_t net_wm_name_atom;
+	xcb_atom_t utf8_string_atom;
+	
 	theme* cur_theme;
 
 public:
@@ -57,15 +61,20 @@ public:
 	
 	static void clean();
 	
-	static void flush() { xcb_flush(instance().con); }
-	
 	static void recycle(std::thread* pGarbage) { instance().garbages.push_back(pGarbage); }
-	static void register_dialog(base_dialog* pDialog, xcb_window_t pWindow) { instance().dialogs.insert({pWindow, pDialog}); }
+	
+	static void register_dialog(base_dialog* pDialog, xcb_window_t pWindow);
+	static void unregister_dialog(xcb_window_t pWindow) { instance().dialogs.erase(pWindow); }
 	
 	static xcb_connection_t *connection() { return instance().con; }
 	static const xcb_screen_t *screen() { return instance().scr; }
 	static const xcb_setup_t *setup() { return instance().set; }
 	static xcb_visualtype_t *root_visualtype();
+	static void flush() { xcb_flush(instance().con); }
+	
+	static xcb_atom_t &get_wm_delete_window_atom() { return instance().wm_delete_window_atom; }
+	static xcb_atom_t &get_net_wm_name_atom() { return instance().net_wm_name_atom; }
+	static xcb_atom_t &get_utf8_string_atom() { return instance().utf8_string_atom; }
 	
 	static theme* get_theme() { return instance().cur_theme; }
 };

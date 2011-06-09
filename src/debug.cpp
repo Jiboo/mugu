@@ -17,7 +17,7 @@ namespace mugu
 
 #ifndef NDEBUG
 // https://idlebox.net/2008/0901-stacktrace-demangled/
-static void __print_stacktrace()
+void __print_stacktrace()
 {
 	void* addrlist[32];
 	int addrlen = backtrace(addrlist, sizeof(addrlist) / sizeof(void*));
