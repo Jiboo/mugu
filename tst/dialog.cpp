@@ -38,20 +38,11 @@ int main(int, char**)
 	
 	d1->adapt();
 	
-	std::cout << d1->get_contentbox_width() << std::endl;
-	std::cout << d1->get_marginbox_width() << std::endl;
-
-	d1->anim(&dialog_t::set_marginbox_width, d1->get_marginbox_width(), (unsigned)800, std::chrono::seconds(3));
+	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)800, std::chrono::seconds(3));
 	//r1->anim(&button::set_width, r1->get_width(), (unsigned)800, std::chrono::seconds(3));
 	
 	context::clean();
-	
-	std::cout << d1->get_contentbox_width() << std::endl;
-	std::cout << d1->get_marginbox_width() << std::endl;
-	
-	std::cout << r1->get_contentbox_width() << std::endl;
-	std::cout << r1->get_marginbox_width() << std::endl;
-	
+
 	delete d1;
 	return 0;
 }

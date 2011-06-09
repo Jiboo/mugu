@@ -38,8 +38,8 @@ void flexgrid::adapt()
 
 		children[i]->adapt();
 
-		cols[c] = std::max(cols[c], children[i]->get_marginbox_width());
-		rows[r] = std::max(rows[r], children[i]->get_marginbox_height());
+		cols[c] = std::max(cols[c], children[i]->get_width());
+		rows[r] = std::max(rows[r], children[i]->get_height());
 	}
 
 	for(unsigned col : cols)
@@ -48,15 +48,15 @@ void flexgrid::adapt()
 	for(unsigned row : rows)
 		h += row;
 
-	this->set_contentbox_width(w + (this->cols.size() - 1) * this->hgap);
-	this->set_contentbox_height(h + (this->rows.size() - 1) * this->vgap);
+	this->set_width(w + (this->cols.size() - 1) * this->hgap);
+	this->set_height(h + (this->rows.size() - 1) * this->vgap);
 }
 
 void flexgrid::layout()
 {
 	unsigned w = 0, h = 0, r, c;
-	unsigned offset_left = this->get_contentbox_offset_left();
-	unsigned offset_top = this->get_contentbox_offset_top();
+	unsigned offset_left = this->left;
+	unsigned offset_top = this->top;
 	
 	// balance
 	for(unsigned &col : cols)
@@ -98,15 +98,15 @@ void flexgrid::layout()
 		child->set_top(offset_top);
 
 		if(this->hfill)
-			child->set_marginbox_width(cols[c]);
+			child->set_width(cols[c]);
 		if(this->vfill)
-			child->set_marginbox_height(rows[r]);
+			child->set_height(rows[r]);
 			
 		child->layout();
 			
 		if(c == (this->cols.size() - 1))
 		{
-			offset_left = this->get_contentbox_offset_left();
+			offset_left = this->left;
 			offset_top += this->rows[r] + this->vgap;
 		}
 		else

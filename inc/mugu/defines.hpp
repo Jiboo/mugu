@@ -18,5 +18,4 @@ namespace mugu
 	public: inline pType pGetter##_##pName() const { return pName; } \
 	inline pQualifier void set_##pName(const pType _##pName) { pName = _##pName; }
 
-
 } // namespace mugu

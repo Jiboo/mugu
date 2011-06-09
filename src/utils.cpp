@@ -15,14 +15,17 @@
 namespace mugu
 {
 
-cairo_text_extents_t get_text_extents(std::function<void(cairo_t*)> pSelect, std::string &pString)
+namespace utils
+{
+
+cairo_text_extents_t get_text_extents(std::string &pString)
 {
 	cairo_text_extents_t extents;
 	
 	cairo_surface_t* tmp = cairo_image_surface_create(CAIRO_FORMAT_A1, 1, 1);
 	cairo_t* ctx = cairo_create(tmp);
 	
-	pSelect(ctx);
+	init_context(ctx);
 
 	cairo_text_extents(ctx, pString.c_str(), &extents);
 
@@ -31,5 +34,13 @@ cairo_text_extents_t get_text_extents(std::function<void(cairo_t*)> pSelect, std
 	
 	return extents;
 }
+
+void init_context(cairo_t* pContext)
+{
+	cairo_select_font_face(pContext, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size(pContext, 9.0);
+}
+
+} // namespace utils
 
 } // namespace mugu

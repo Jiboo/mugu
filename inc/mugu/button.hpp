@@ -12,7 +12,6 @@
 
 #include <string>
 
-#include "mugu/styles.hpp"
 #include "mugu/clickable.hpp"
 
 namespace mugu
@@ -24,11 +23,7 @@ protected:
 	cairo_text_extents_t extents;
 
 public:
-	MUGU_PROP(, set, std::string, text);
-	MUGU_STYLE_TEXT(text);
-	
-	MUGU_STYLE_SOURCE(background_clicked);
-	MUGU_STYLE_SOURCE_DIRECTIONS(border_clicked);
+	MUGU_PROP(, get, std::string, text);
 
 public:
 	button(std::string pText);
@@ -37,6 +32,9 @@ public:
 public:
 	
 	virtual void draw(cairo_t* pContext);
+	
+public:
+	cairo_text_extents_t &get_text_extents() { return this->extents; }
 };
 
 } // namespace mugu

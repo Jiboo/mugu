@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <cairo/cairo.h>
+
 namespace mugu
 {
 
@@ -19,8 +21,8 @@ class button;
 class theme
 {
 public:
-	virtual void draw(base_dialog* pDialog) = 0;
-	virtual void draw(button* pButton) = 0;
+	virtual void draw(cairo_t* pContext, base_dialog* pDialog) = 0;
+	virtual void draw(cairo_t* pContext, button* pButton) = 0;
 };
 
 } // namespace mugu

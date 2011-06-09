@@ -11,6 +11,8 @@
 #include "mugu/context.hpp"
 #include "mugu/base_dialog.hpp"
 
+#include "mugu/theme_mugu.hpp"
+
 namespace mugu
 {
 
@@ -22,6 +24,8 @@ context::context()
     this->scr = iter.data;
     
     this->garbages.push_back(new std::thread(&context::event_pump, this));
+    
+    this->cur_theme = new theme_mugu;
 }
 
 context::~context()

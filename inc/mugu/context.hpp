@@ -17,6 +17,8 @@
 #include <cairo/cairo.h>
 #include <fontconfig/fontconfig.h>
 
+#include "mugu/theme.hpp"
+
 namespace mugu
 {
 
@@ -31,6 +33,8 @@ protected:
 	xcb_connection_t *con;
 	const xcb_screen_t *scr;
 	const xcb_setup_t *set;
+	
+	theme* cur_theme;
 
 public:
 	context();
@@ -39,10 +43,16 @@ public:
 public:
 	void event_pump();
 
-	static context& instance ()
+	static context& instance()
 	{
 		static context singleton;
 		return singleton; 
+	}
+	
+	static void set_theme(theme* pTheme)
+	{
+		delete instance().cur_theme;
+		instance().cur_theme = pTheme;
 	}
 	
 	static void clean();
@@ -56,6 +66,8 @@ public:
 	static const xcb_screen_t *screen() { return instance().scr; }
 	static const xcb_setup_t *setup() { return instance().set; }
 	static xcb_visualtype_t *root_visualtype();
+	
+	static theme* get_theme() { return instance().cur_theme; }
 };
 
 } // namespace mugu

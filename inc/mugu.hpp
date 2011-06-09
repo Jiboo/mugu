@@ -10,9 +10,7 @@
 
 #include "mugu/debug.hpp"
 #include "mugu/defines.hpp"
-#include "mugu/styles.hpp"
 #include "mugu/transitions.hpp"
-#include "mugu/source.hpp"
 #include "mugu/event.hpp"
 #include "mugu/context.hpp"
 #include "mugu/widget.hpp"

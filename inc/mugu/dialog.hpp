@@ -44,11 +44,8 @@ public:
 		this->width = 150;
 		this->height = 150;
 		
-		this->set_padding(5);
-		this->background_source = new source_rgba(168/255., 168/255., 168/255., 1);
-
-		this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->get_marginbox_width(), this->get_marginbox_height());
-		this->surface = cairo_xcb_surface_create(context::connection(), this->window, context::root_visualtype(), this->get_marginbox_width(), this->get_marginbox_height());
+		this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
+		this->surface = cairo_xcb_surface_create(context::connection(), this->window, context::root_visualtype(), this->width, this->height);
 		
 		uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
 		uint32_t values[2] =
@@ -80,26 +77,23 @@ public:
 		xcb_destroy_window(context::connection(), this->window);
 		cairo_surface_destroy(this->surface);
 		cairo_surface_destroy(this->cache);
-		
-		delete this->background_source;
 	}
 
-protected:
+public:
 	virtual void set_width(unsigned pWidth)
 	{
-		uint32_t temp = pWidth + this->margin_left + this->margin_right + this->border_size_left + this->border_size_right + this->padding_left + this->padding_right;
+		uint32_t temp = pWidth;
 		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_WIDTH, &temp);
 		context::flush();
 	}
 	
 	virtual void set_height(unsigned pHeight)
 	{
-		uint32_t temp = pHeight + this->margin_top + this->margin_bottom + this->border_size_top + this->border_size_bottom + this->padding_top + this->padding_bottom;
+		uint32_t temp = pHeight;
 		xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_HEIGHT, &temp);
 		context::flush();
 	}
 
-public:
 	virtual void set_visible(bool pVisible)
 	{
 		this->visible = pVisible;
@@ -135,6 +129,12 @@ public:
 		this->refresh();
 	}
 	
+	virtual void draw(cairo_t* pContext)
+	{
+		context::get_theme()->draw(pContext, this);
+		tContainer::draw(pContext);
+	}
+	
 	virtual void layout()
 	{
 		tContainer::layout();
@@ -145,13 +145,13 @@ public:
 	{
 		if(pWidth != this->width || pHeight != this->height)
 		{
-			this->width = pWidth - this->margin_left - this->margin_right - this->border_size_left - this->border_size_right - this->padding_left - this->padding_right;
-			this->height = pHeight - this->margin_top - this->margin_bottom - this->border_size_top - this->border_size_bottom - this->padding_top - this->padding_bottom;
+			this->width = pWidth;
+			this->height = pHeight;
 			
-			cairo_xcb_surface_set_size(this->surface, this->get_marginbox_width(), this->get_marginbox_height());
+			cairo_xcb_surface_set_size(this->surface, this->width, this->height);
 			
 			cairo_surface_destroy(this->cache);
-			this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->get_marginbox_width(), this->get_marginbox_height());
+			this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
 			this->layout();
 		}
 	}
@@ -168,7 +168,7 @@ public:
 	{
 		cairo_t *ctx = cairo_create(this->surface);
 		cairo_set_source_surface(ctx, this->cache, 0, 0);
-		cairo_rectangle(ctx, pWidget->get_marginbox_offset_left(), pWidget->get_marginbox_offset_top(), pWidget->get_marginbox_width(), pWidget->get_marginbox_height());
+		cairo_rectangle(ctx, pWidget->get_left(), pWidget->get_top(), pWidget->get_width(), pWidget->get_height());
 		cairo_fill(ctx);
 		cairo_destroy(ctx);
 	}
@@ -186,7 +186,7 @@ public:
 	
 	void debug()
 	{
-		cairo_surface_t* png = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->get_marginbox_width(), this->get_marginbox_height());
+		cairo_surface_t* png = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
 		cairo_t* ctx = cairo_create(png);
 		cairo_set_source_surface(ctx, this->cache, 0, 0);
 		cairo_paint(ctx);
