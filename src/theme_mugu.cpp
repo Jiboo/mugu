@@ -9,10 +9,11 @@
  */
  
 #include "mugu/theme_mugu.hpp"
+#include "mugu/utils.hpp"
 
 #include "mugu/base_dialog.hpp"
 #include "mugu/button.hpp"
-#include "mugu/utils.hpp"
+#include "mugu/label.hpp"
 
 namespace mugu
 {
@@ -110,6 +111,37 @@ void theme_mugu::draw(cairo_t* pContext, button* pButton)
 		cairo_move_to(pContext, text_x, text_y);
 		utils::set_source(pContext, text);
 		cairo_show_text(pContext, pButton->get_text().c_str());
+	}
+}
+
+void theme_mugu::draw(cairo_t* pContext, label* pLabel)
+{
+	double text, text_x, text_y, shadow;
+	
+	cairo_text_extents_t extents = pLabel->get_text_extents();
+	
+	text_x = pLabel->get_left() + (pLabel->get_width() / 2.) - ((extents.width / 2.) + extents.x_bearing);
+	text_y = pLabel->get_top() + (pLabel->get_height() / 2.) - ((extents.height / 2.) + extents.y_bearing);
+	
+	if(!pLabel->is_enabled())
+	{
+		text = 118/255.;
+		shadow = 51/255.;
+	}
+	else
+	{
+		text = 253/255.;
+		shadow = 1/255.;
+	}
+
+	{ //Text
+		cairo_move_to(pContext, text_x, text_y + 1);
+		utils::set_source(pContext, shadow);
+		cairo_show_text(pContext, pLabel->get_text().c_str());
+	
+		cairo_move_to(pContext, text_x, text_y);
+		utils::set_source(pContext, text);
+		cairo_show_text(pContext, pLabel->get_text().c_str());
 	}
 }
 

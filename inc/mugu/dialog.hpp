@@ -183,17 +183,6 @@ public:
 			this->window, WM_NAME, STRING, 8, pTitle.size(), pTitle.c_str());
 		context::flush();
 	}
-	
-	void debug()
-	{
-		cairo_surface_t* png = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
-		cairo_t* ctx = cairo_create(png);
-		cairo_set_source_surface(ctx, this->cache, 0, 0);
-		cairo_paint(ctx);
-		cairo_surface_write_to_png(png, "cache.png");
-		cairo_destroy(ctx);
-		cairo_surface_destroy(png);
-	}
 };
 
 } // namespace mugu

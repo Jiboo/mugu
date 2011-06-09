@@ -21,25 +21,31 @@ int main(int, char**)
 	dialog<grid> *d1 = new dialog<grid>;
 	d1->set_visible(true);
 	d1->set_rows(4);
-	d1->set_cols(1);
+	d1->set_cols(2);
 	d1->set_title("Coucou lol");
 	
+	d1->add(new label("r1"));
 	button *r1 = new button("r{g1");
-	button *r2 = new button("r{g2");
-	button *r3 = new button("r{g3");
-	button *r4 = new button("r{g4");
-	
-	r1->event_click.connect([](unsigned, unsigned){ std::cout << "r1 clicked!" << std::endl; });
-	
 	d1->add(r1);
+	
+	d1->add(new label("r2"));
+	button *r2 = new button("r{g2");
 	d1->add(r2);
+	
+	d1->add(new label("r3"));
+	button *r3 = new button("r{g3");
 	d1->add(r3);
+	
+	d1->add(new label("r4"));
+	button *r4 = new button("r{g4");
 	d1->add(r4);
 	
 	d1->adapt();
 	
-	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)800, std::chrono::seconds(3));
+	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)400, std::chrono::seconds(3));
 	//r1->anim(&button::set_width, r1->get_width(), (unsigned)800, std::chrono::seconds(3));
+	
+	r1->event_click.connect([](unsigned, unsigned){ std::cout << "r1 clicked!" << std::endl; });
 	
 	context::clean();
 
