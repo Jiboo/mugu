@@ -11,14 +11,14 @@
 #include "mugu/theme_mugu.hpp"
 #include "mugu/utils.hpp"
 
-#include "mugu/base_dialog.hpp"
+#include "mugu/dialog.hpp"
 #include "mugu/button.hpp"
 #include "mugu/label.hpp"
 
 namespace mugu
 {
 
-void theme_mugu::draw(cairo_t* pContext, base_dialog*)
+void theme_mugu::draw(cairo_t* pContext, dialog*)
 {
 	utils::set_source(pContext, 62/255.);
 	cairo_paint(pContext);

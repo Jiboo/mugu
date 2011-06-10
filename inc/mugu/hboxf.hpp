@@ -18,10 +18,7 @@ namespace mugu
 class hboxf : public grid
 {
 public:
-	hboxf(unsigned pCols) : grid(1, pCols) {}
-
-	hboxf(std::initializer_list<widget*> pChildren) : grid({ pChildren }) {}
-
+	hboxf(container* pTarget, unsigned pCols) : grid(pTarget, 1, pCols) {}
 	virtual ~hboxf() {}
 };
 

@@ -18,39 +18,26 @@
 namespace mugu
 {
 
-class clickable;
+class layout_algo;
 
 class container : public widget
 {
-	friend class base_dialog;
+	friend class dialog;
 
 protected:
 	std::vector<widget*> children;
-	
-public:
-	MUGU_PROP(, get, unsigned, hgap);
-	MUGU_PROP(, get, unsigned, vgap);
 
-	MUGU_PROP(, has, unsigned, hfill);
-	MUGU_PROP(, has, unsigned, vfill);
+	layout_algo *cur_layout;
 
 public:
-	container()
-	{
-		this->hgap = 1;
-		this->vgap = 1;
-		this->hfill = true;
-		this->vfill = true;
-	}
+	container() {}
 
-	virtual ~container()
-	{
-		for(widget* child : children)
-			delete child;
-	}
+	virtual ~container();
 
 public:
 	virtual void draw(cairo_t* pContext);
+	virtual void adapt();
+	virtual void layout();
 
 public:
 	void add(widget* pChild)
@@ -60,6 +47,10 @@ public:
 		
 		this->children.push_back(pChild);
 	}
+	
+	void set_layout(layout_algo* pLayout) { this->cur_layout = pLayout; }
+	
+	std::vector<widget*> &get_children() { return this->children; };
 };
 
 } // namespace mugu

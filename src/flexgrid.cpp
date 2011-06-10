@@ -11,27 +11,17 @@
 #include <algorithm>
 
 #include "mugu/flexgrid.hpp"
+#include "mugu/container.hpp"
 
 namespace mugu
 {
 
-flexgrid::flexgrid(std::initializer_list<std::initializer_list<widget*>> pChildren)
-{
-	this->rows.assign(pChildren.size(), 0);
-	this->cols.assign((*(pChildren.begin())).size(), 0);
-
-	for(std::initializer_list<widget*> row : pChildren)
-	{
-		for(widget* col : row)
-			this->add(col);
-	}
-}
-
 void flexgrid::adapt()
 {
+	auto children = target->get_children();
 	unsigned w = 0, h = 0, r, c;
 
-	for(unsigned i = 0; i < this->children.size(); i++)
+	for(unsigned i = 0; i < children.size(); i++)
 	{
 		r = i / this->cols.size();
         c = i % this->cols.size();
@@ -48,8 +38,8 @@ void flexgrid::adapt()
 	for(unsigned row : rows)
 		h += row;
 
-	this->set_width(w + (this->cols.size() - 1) * this->hgap);
-	this->set_height(h + (this->rows.size() - 1) * this->vgap);
+	target->set_width(w + (this->cols.size() - 1) * this->hgap);
+	target->set_height(h + (this->rows.size() - 1) * this->vgap);
 	
 	/*if(this->parent != nullptr)
 		parent->layout();
@@ -58,9 +48,10 @@ void flexgrid::adapt()
 
 void flexgrid::layout()
 {
+	auto children = target->get_children();
 	unsigned w = 0, h = 0, r, c;
-	unsigned offset_left = this->left;
-	unsigned offset_top = this->top;
+	unsigned offset_left = target->get_left();
+	unsigned offset_top = target->get_top();
 	
 	// balance
 	for(unsigned &col : cols)
@@ -68,8 +59,8 @@ void flexgrid::layout()
 	for(unsigned &row : rows)
 		h += row;
 		
-	signed diff_w = ((signed)this->width - (this->cols.size() - 1) * this->hgap) - (signed)w;
-	signed diff_h = ((signed)this->height - (this->rows.size() - 1) * this->vgap) - (signed)h;
+	signed diff_w = ((signed)target->get_width() - (this->cols.size() - 1) * this->hgap) - (signed)w;
+	signed diff_h = ((signed)target->get_height() - (this->rows.size() - 1) * this->vgap) - (signed)h;
 	
 	if(diff_w)
 	{
@@ -91,9 +82,9 @@ void flexgrid::layout()
 	}
 	// end balance
 
-	for(unsigned i = 0; i < this->children.size(); i++)
+	for(unsigned i = 0; i < children.size(); i++)
 	{
-		widget* child = this->children[i];
+		widget* child = children[i];
 
 		r = i / this->cols.size();
 		c = i % this->cols.size();
@@ -110,7 +101,7 @@ void flexgrid::layout()
 			
 		if(c == (this->cols.size() - 1))
 		{
-			offset_left = this->left;
+			offset_left = target->get_left();
 			offset_top += this->rows[r] + this->vgap;
 		}
 		else

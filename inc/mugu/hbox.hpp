@@ -18,12 +18,8 @@ namespace mugu
 class hbox : public flexgrid
 {
 public:
-	hbox(unsigned pCols)
-		: flexgrid(1, pCols)
-	{}
-
-	hbox(std::initializer_list<widget*> pChildren)
-		: flexgrid({ pChildren })
+	hbox(container* pTarget, unsigned pCols)
+		: flexgrid(pTarget, 1, pCols)
 	{}
 
 	virtual ~hbox() {}

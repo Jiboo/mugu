@@ -15,14 +15,8 @@ using namespace mugu;
 int main(int, char**)
 {
 	srand(time(NULL));
-	
-	typedef dialog<grid> dialog_t;
 
-	dialog<grid> *d1 = new dialog<grid>;
-	d1->set_visible(true);
-	d1->set_rows(4);
-	d1->set_cols(2);
-	d1->set_title("Coucou lol");
+	dialog* d1 = new dialog("tst/dialog");
 	
 	d1->add(new label("r1"));
 	button *r1 = new button("r{g1");
@@ -40,9 +34,11 @@ int main(int, char**)
 	button *r4 = new button("r{g4");
 	d1->add(r4);
 	
+	d1->set_layout(new flexgrid(d1, 4, 2));
+	d1->set_visible(true);
 	d1->adapt();
 	
-	d1->anim(&dialog_t::set_width, d1->get_width(), (unsigned)400, std::chrono::seconds(1));
+	d1->anim(&dialog::set_width, d1->get_width(), (unsigned)400, std::chrono::seconds(1));
 	//r1->anim(&button::set_width, r1->get_width(), (unsigned)800, std::chrono::seconds(3));
 	
 	r1->event_click.connect([](unsigned, unsigned){ std::cout << "r1 clicked!" << std::endl; });
@@ -53,6 +49,15 @@ int main(int, char**)
 		if(messagebox("Quit", "Do you really wanna quit?", {"Yes", "No"}) == 1)
 			throw event_stop();
 	});
+	
+	/*dialog* d1 = new dialog("tst/dialog");
+	d1->set_layout(new hbox(d1, 2));
+	d1->set_visible(true);
+	
+	d1->add(new label("test1"));
+	d1->add(new label("test2"));
+	
+	d1->adapt();*/
 	
 	context::clean();
 	return 0;

@@ -10,28 +10,25 @@
  
 #pragma once
 
-#include "mugu/container.hpp"
+#include "mugu/layout_algo.hpp"
 #include "mugu/defines.hpp"
 
 namespace mugu
 {
 
-class grid : public virtual container
+class grid : public layout_algo
 {
 public:
 	MUGU_PROP(, get, unsigned, rows);
 	MUGU_PROP(, get, unsigned, cols);
 
 public:
-	grid() {}
-
-	grid(unsigned pRows, unsigned pCols)
+	grid(container* pTarget, unsigned pRows, unsigned pCols)
+		: layout_algo(pTarget)
 	{
 		this->rows = pRows;
 		this->cols = pCols;
 	}
-
-	grid(std::initializer_list<std::initializer_list<widget*>> pChildren);
 
 	virtual ~grid() {}
 

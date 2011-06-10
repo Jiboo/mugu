@@ -22,13 +22,13 @@
 namespace mugu
 {
 
-class base_dialog;
+class dialog;
 
 class context
 {
 protected:
 	std::vector<std::thread*> garbages;
-	std::map<xcb_window_t, base_dialog*> dialogs;
+	std::map<xcb_window_t, dialog*> dialogs;
 	std::thread* pump;
 	
 	xcb_connection_t *con;
@@ -64,7 +64,7 @@ public:
 	
 	static void recycle(std::thread* pGarbage) { instance().garbages.push_back(pGarbage); }
 	
-	static void register_dialog(base_dialog* pDialog, xcb_window_t pWindow);
+	static void register_dialog(dialog* pDialog, xcb_window_t pWindow);
 	static void unregister_dialog(xcb_window_t pWindow) { instance().dialogs.erase(pWindow); }
 	
 	static xcb_connection_t *connection() { return instance().con; }

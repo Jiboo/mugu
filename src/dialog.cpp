@@ -1,5 +1,5 @@
 /*
- * base_dialog.cpp
+ * dialog.cpp
  * This file is part of Mugu
  *
  * Copyright (C) 2011 - LEPESME "Jiboo" Jean-Baptiste
@@ -13,18 +13,19 @@
 #include <xcb/xcb_icccm.h>
 #include <cairo/cairo-xcb.h>
 
-#include "mugu/base_dialog.hpp"
+#include "mugu/dialog.hpp"
 #include "mugu/clickable.hpp"
 #include "mugu/container.hpp"
+#include "mugu/grid.hpp"
 
 namespace mugu
 {
 
-base_dialog::base_dialog()
+dialog::dialog(std::string pTitle)
 	: focused(nullptr)
 {
 	this->parent = nullptr;
-	this->root = dynamic_cast<base_dialog*>(this);
+	this->root = this;
 
 	this->window = xcb_generate_id(context::connection());
 	this->width = 150;
@@ -36,30 +37,31 @@ base_dialog::base_dialog()
 	uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
 	uint32_t values[2] =
 	{
-		context::screen()->white_pixel,
-		XCB_EVENT_MASK_EXPOSURE
-			| XCB_EVENT_MASK_STRUCTURE_NOTIFY
-			| XCB_EVENT_MASK_BUTTON_PRESS
-			| XCB_EVENT_MASK_BUTTON_RELEASE
+		 context::screen()->white_pixel,
+		 XCB_EVENT_MASK_EXPOSURE
+			  | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+			  | XCB_EVENT_MASK_BUTTON_PRESS
+			  | XCB_EVENT_MASK_BUTTON_RELEASE
 	};
 
 	xcb_create_window(context::connection(),
-		XCB_COPY_FROM_PARENT,
-		this->window,
-		context::screen()->root,
-		0, 0,
-		150, 150,
-		10,
-		XCB_WINDOW_CLASS_INPUT_OUTPUT,
-		context::screen()->root_visual,
-		mask, values);
+		 XCB_COPY_FROM_PARENT,
+		 this->window,
+		 context::screen()->root,
+		 0, 0,
+		 150, 150,
+		 10,
+		 XCB_WINDOW_CLASS_INPUT_OUTPUT,
+		 context::screen()->root_visual,
+		 mask, values);
+		 
+	this->set_title(pTitle);
 
 	xcb_set_wm_protocols(context::connection(), xcb_atom_get(context::connection(), "WM_PROTOCOLS"), this->window, 1, &(context::get_wm_delete_window_atom()));
-
-	context::register_dialog(dynamic_cast<base_dialog*>(this), this->window);
+	context::register_dialog(this, this->window);
 }
 
-base_dialog::~base_dialog()
+dialog::~dialog()
 {
 	this->set_visible(false);
 	xcb_destroy_window(context::connection(), this->window);
@@ -67,7 +69,13 @@ base_dialog::~base_dialog()
 	cairo_surface_destroy(this->cache);
 }
 
-void base_dialog::refresh()
+void dialog::draw(cairo_t* pContext)
+{
+	context::get_theme()->draw(pContext, this);
+	container::draw(pContext);
+}
+
+void dialog::refresh()
 {
 	cairo_t *ctx = cairo_create(this->surface);
 	cairo_set_source_surface(ctx, this->cache, 0, 0);
@@ -75,7 +83,7 @@ void base_dialog::refresh()
 	cairo_destroy(ctx);
 }
 
-void base_dialog::redraw()
+void dialog::redraw()
 {
 	cairo_t *ctx = cairo_create(this->cache);
 	this->draw(ctx);
@@ -84,7 +92,7 @@ void base_dialog::redraw()
 	this->refresh();
 }
 
-void base_dialog::redraw(widget *pWidget)
+void dialog::redraw(widget *pWidget)
 {
 	cairo_t *ctx = cairo_create(this->cache);
 	pWidget->draw(ctx);
@@ -93,7 +101,7 @@ void base_dialog::redraw(widget *pWidget)
 	this->refresh(pWidget);
 }
 
-void base_dialog::refresh(widget *pWidget)
+void dialog::refresh(widget *pWidget)
 {
 	cairo_t *ctx = cairo_create(this->surface);
 	cairo_set_source_surface(ctx, this->cache, 0, 0);
@@ -102,7 +110,7 @@ void base_dialog::refresh(widget *pWidget)
 	cairo_destroy(ctx);
 }
 
-void base_dialog::invalidates(unsigned pLeft, unsigned pTop, unsigned pWidth, unsigned pHeight)
+void dialog::invalidates(unsigned pLeft, unsigned pTop, unsigned pWidth, unsigned pHeight)
 {
 	cairo_t *ctx = cairo_create(this->surface);
 	cairo_set_source_surface(ctx, this->cache, 0, 0);
@@ -111,21 +119,21 @@ void base_dialog::invalidates(unsigned pLeft, unsigned pTop, unsigned pWidth, un
 	cairo_destroy(ctx);
 }
 
-void base_dialog::set_width(unsigned pWidth)
+void dialog::set_width(unsigned pWidth)
 {
 	uint32_t temp = pWidth;
 	xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_WIDTH, &temp);
 	context::flush();
 }
 
-void base_dialog::set_height(unsigned pHeight)
+void dialog::set_height(unsigned pHeight)
 {
 	uint32_t temp = pHeight;
 	xcb_configure_window(context::connection(), this->window, XCB_CONFIG_WINDOW_HEIGHT, &temp);
 	context::flush();
 }
 
-void base_dialog::set_visible(bool pVisible)
+void dialog::set_visible(bool pVisible)
 {
 	this->visible = pVisible;
 	if(pVisible)
@@ -135,7 +143,7 @@ void base_dialog::set_visible(bool pVisible)
 	context::flush();
 }
 
-void base_dialog::set_title(std::string pTitle)
+void dialog::set_title(std::string pTitle)
 {
 	this->title = pTitle;
 	
@@ -144,7 +152,7 @@ void base_dialog::set_title(std::string pTitle)
 	context::flush();
 }
 
-void base_dialog::close()
+void dialog::close()
 {
 	// Simulate a wm close
 	xcb_client_message_event_t ev;
@@ -162,7 +170,7 @@ void base_dialog::close()
 	xcb_flush(context::connection());
 }
 
-void base_dialog::__handle_button(unsigned pLeft, unsigned pTop, bool pClicked)
+void dialog::__handle_button(unsigned pLeft, unsigned pTop, bool pClicked)
 {
 	clickable* cli = get_widget(this, pLeft, pTop);
 	
@@ -176,7 +184,7 @@ void base_dialog::__handle_button(unsigned pLeft, unsigned pTop, bool pClicked)
 	}
 }
 
-void base_dialog::__configure_notify(unsigned pWidth, unsigned pHeight)
+void dialog::__configure_notify(unsigned pWidth, unsigned pHeight)
 {
 	if(pWidth != this->width || pHeight != this->height)
 	{
@@ -188,22 +196,23 @@ void base_dialog::__configure_notify(unsigned pWidth, unsigned pHeight)
 		this->cache = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
 		
 		this->layout();
+		this->redraw();
 	}
 }
 
-void base_dialog::__handle_close_request()
+void dialog::__handle_close_request()
 {
 	this->event_close.fire(std::bind(__close_final, this));
 }
 
-void __close_final(base_dialog* pDialog)
+void __close_final(dialog* pDialog)
 {
 	xcb_window_t win = pDialog->window;
 	delete pDialog;
 	context::unregister_dialog(win);
 }
 
-clickable* base_dialog::get_widget(container *pContainer, unsigned pLeft, unsigned pTop)
+clickable* dialog::get_widget(container *pContainer, unsigned pLeft, unsigned pTop)
 {
 	for(widget* child : pContainer->children)
 	{

@@ -11,9 +11,17 @@
 #include <iostream>
  
 #include "mugu/container.hpp"
+#include "mugu/layout_algo.hpp"
 
 namespace mugu
 {
+
+container::~container()
+{
+	for(widget* child : children)
+		delete child;
+	delete this->cur_layout;
+}
 
 void container::draw(cairo_t* pContext)
 {
@@ -25,6 +33,16 @@ void container::draw(cairo_t* pContext)
 				child->draw(pContext);
 		}
 	}
+}
+
+void container::adapt()
+{
+	this->cur_layout->adapt();
+}
+
+void container::layout()
+{
+	this->cur_layout->layout();
 }
 
 } // namespace mugu

@@ -12,27 +12,22 @@
 
 #include <vector>
 
-#include "mugu/container.hpp"
+#include "mugu/layout_algo.hpp"
 #include "mugu/defines.hpp"
 
 namespace mugu
 {
 
-class flexgrid : public virtual container
+class flexgrid : public layout_algo
 {
 protected:
 	std::vector<unsigned> rows;
 	std::vector<unsigned> cols;
 
 public:
-	flexgrid() {}
 
-	flexgrid(unsigned pRows, unsigned pCols)
-		: rows(pRows, 0), cols(pCols, 0)
-	{
-	}
-
-	flexgrid(std::initializer_list<std::initializer_list<widget*>> pChildren);
+	flexgrid(container* pTarget, unsigned pRows, unsigned pCols)
+		: layout_algo(pTarget), rows(pRows, 0), cols(pCols, 0) {}
 
 	virtual ~flexgrid() {}
 

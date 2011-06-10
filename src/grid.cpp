@@ -9,27 +9,17 @@
  */
  
 #include "mugu/grid.hpp"
+#include "mugu/container.hpp"
 
 namespace mugu
 {
 
-grid::grid(std::initializer_list<std::initializer_list<widget*>> pChildren)
-{
-	this->rows = pChildren.size();
-	this->cols = (*(pChildren.begin())).size();
-
-	for(std::initializer_list<widget*> row : pChildren)
-	{
-		for(widget* col : row)
-			this->add(col);
-	}
-}
-
 void grid::adapt()
 {
+	auto children = target->get_children();
 	unsigned max_width = 0, max_height = 0;
 
-	for(widget* child : this->children)
+	for(widget* child : children)
 	{
 		child->adapt();
 
@@ -37,8 +27,8 @@ void grid::adapt()
 		max_height = std::max(max_height, child->get_height());
 	}
 
-	this->set_width((max_width * cols) + (this->cols - 1) * this->hgap);
-	this->set_height((max_height * rows) + (this->rows - 1) * this->vgap);
+	target->set_width((max_width * cols) + (this->cols - 1) * this->hgap);
+	target->set_height((max_height * rows) + (this->rows - 1) * this->vgap);
 	
 	/*if(this->parent != nullptr)
 		parent->layout();
@@ -47,15 +37,16 @@ void grid::adapt()
 
 void grid::layout()
 {
-	unsigned max_width = (this->width - (this->cols - 1) * this->hgap) / cols;
-	unsigned max_height = (this->height - (this->rows - 1) * this->vgap) / rows;
+	auto children = target->get_children();
+	unsigned max_width = (target->get_width() - (this->cols - 1) * this->hgap) / cols;
+	unsigned max_height = (target->get_height() - (this->rows - 1) * this->vgap) / rows;
 
-	unsigned offset_left = this->left;
-	unsigned offset_top = this->top;
+	unsigned offset_left = target->get_left();
+	unsigned offset_top = target->get_top();
 
 	unsigned col = 0;
 
-	for(widget* child : this->children)
+	for(widget* child : children)
 	{
 		child->set_left(offset_left);
 		child->set_top(offset_top);
@@ -69,7 +60,7 @@ void grid::layout()
 
 		if(++col >= this->cols)
 		{
-			offset_left = this->left;
+			offset_left = target->get_left();
 			offset_top += max_height + this->vgap;
 			col = 0;
 		}

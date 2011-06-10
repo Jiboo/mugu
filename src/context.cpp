@@ -12,7 +12,7 @@
 
 #include "mugu/debug.hpp"
 #include "mugu/context.hpp"
-#include "mugu/base_dialog.hpp"
+#include "mugu/dialog.hpp"
 
 #include "mugu/theme_mugu.hpp"
 
@@ -150,7 +150,7 @@ void context::clean()
 	instance().garbages.clear();
 }
 
-void context::register_dialog(base_dialog* pDialog, xcb_window_t pWindow)
+void context::register_dialog(dialog* pDialog, xcb_window_t pWindow)
 {
 	instance().dialogs.insert({pWindow, pDialog});
 	if(instance().dialogs.size() == 1)

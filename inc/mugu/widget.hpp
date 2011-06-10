@@ -23,7 +23,7 @@
 namespace mugu
 {
 
-class base_dialog;
+class dialog;
 
 class widget
 {
@@ -31,7 +31,7 @@ class widget
 
 protected:
 	widget* parent;
-	base_dialog* root;
+	dialog* root;
 
 public:
 	MUGU_PROP(virtual, get, unsigned, width);

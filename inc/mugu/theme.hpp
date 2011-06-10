@@ -15,14 +15,14 @@
 namespace mugu
 {
 
-class base_dialog;
+class dialog;
 class button;
 class label;
 
 class theme
 {
 public:
-	virtual void draw(cairo_t* pContext, base_dialog* pDialog) = 0;
+	virtual void draw(cairo_t* pContext, dialog* pDialog) = 0;
 	virtual void draw(cairo_t* pContext, button* pButton) = 0;
 	virtual void draw(cairo_t* pContext, label* pLabel) = 0;
 };

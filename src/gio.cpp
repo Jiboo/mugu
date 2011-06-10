@@ -24,7 +24,7 @@ namespace mugu
 
 void alert(std::string pTitle, std::string pMessage)
 {
-	dialog<flexgrid> *box = new dialog<flexgrid>;
+	/*dialog<flexgrid> *box = new dialog<flexgrid>;
 	box->set_rows(2);
 	box->set_cols(1);
 	box->set_title(pTitle);
@@ -38,7 +38,7 @@ void alert(std::string pTitle, std::string pMessage)
 	ok->event_click.connect([box](unsigned, unsigned) { box->close(); });
 	
 	box->adapt();
-	box->set_visible(true);
+	box->set_visible(true);*/
 }
 
 int messagebox(std::string pTitle, std::string pMessage, std::vector<std::string> pButtons)
@@ -46,7 +46,7 @@ int messagebox(std::string pTitle, std::string pMessage, std::vector<std::string
 	std::mutex mu;
 	int ret = -1;
 
-	mu.lock();
+	/*mu.lock();
 
 	dialog<flexgrid> *box = new dialog<flexgrid>;
 	box->set_rows(2);
@@ -81,7 +81,7 @@ int messagebox(std::string pTitle, std::string pMessage, std::vector<std::string
 	box->adapt();
 	box->set_visible(true);
 	
-	mu.lock();
+	mu.lock();*/
 	return ret;
 }
 

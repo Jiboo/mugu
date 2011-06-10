@@ -18,18 +18,7 @@ namespace mugu
 class vboxf : public grid
 {
 public:
-	vboxf(unsigned pRows) : grid(pRows, 1) {}
-
-	vboxf(std::initializer_list<widget*> pChildren)
-		: grid(0, 0)
-	{
-		this->rows = pChildren.size();
-		this->cols = 1;
-
-		for(widget* row : pChildren)
-			this->add(row);
-	}
-
+	vboxf(container* pTarget, unsigned pRows) : grid(pTarget, pRows, 1) {}
 	virtual ~vboxf() {}
 };
 
