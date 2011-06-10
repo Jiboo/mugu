@@ -24,7 +24,7 @@ public:
 
 public:
 	clickable()
-		: clicked(false), event_click(std::bind(&clickable::__click_final, this))
+		: clicked(false)
 	{
 		this->event_click.connect(std::bind(&clickable::on_click, this, std::placeholders::_1, std::placeholders::_2));
 	}

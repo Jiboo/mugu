@@ -37,13 +37,12 @@ class event
 {
 protected:
 	std::vector<std::function<void(tArgTypes...)>> callbacks;
-	std::function<void(void)> final;
 	
 public:
 	MUGU_PROP(, is, bool, async);
 
 public:
-	event(std::function<void()> pFinal) : final(pFinal), async(false) {}
+	event() : async(false) {}
 
 public:
 	void connect(std::function<void(tArgTypes...)> pFunc)
@@ -51,25 +50,25 @@ public:
 		callbacks.push_back(pFunc);
 	}
 
-	void run(tArgTypes...pArgs);
+	void run(std::function<void(void)> pFinal, tArgTypes...pArgs);
 
-	void fire(tArgTypes...pArgs)
+	void fire(std::function<void(void)> pFinal, tArgTypes...pArgs)
 	{
 		if(!this->async)
-			this->run(pArgs...);
+			this->run(pFinal, pArgs...);
 		else
-			context::recycle(new std::thread(std::bind(&event<tArgTypes...>::run, this, pArgs...)));
+			context::recycle(new std::thread(std::bind(&event<tArgTypes...>::run, this, pFinal, pArgs...)));
 	}
 };
 
 template<typename...tArgTypes>
-void event<tArgTypes...>::run(tArgTypes...pArgs)
+void event<tArgTypes...>::run(std::function<void(void)> pFinal, tArgTypes...pArgs)
 {
 	try
 	{
 		for(std::function<void(tArgTypes...)> &callback : callbacks)
 			callback(pArgs...);
-		this->final();
+		pFinal();
 	}
 	catch(event_stop& e) {}
 	catch(std::exception& e) {}
@@ -77,3 +76,4 @@ void event<tArgTypes...>::run(tArgTypes...pArgs)
 }
 
 } // namespace mugu
+

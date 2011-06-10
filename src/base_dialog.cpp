@@ -21,7 +21,7 @@ namespace mugu
 {
 
 base_dialog::base_dialog()
-	: focused(nullptr), event_close(std::bind(__close_final, this))
+	: focused(nullptr)
 {
 	this->parent = nullptr;
 	this->root = dynamic_cast<base_dialog*>(this);
@@ -193,7 +193,7 @@ void base_dialog::__configure_notify(unsigned pWidth, unsigned pHeight)
 
 void base_dialog::__handle_close_request()
 {
-	this->event_close.fire();
+	this->event_close.fire(std::bind(__close_final, this));
 }
 
 void __close_final(base_dialog* pDialog)

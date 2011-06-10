@@ -23,7 +23,7 @@ void clickable::__handle_button(unsigned pWidth, unsigned pHeight, bool pClicked
 	else
 	{
 		if(this->clicked)
-			this->event_click.fire(pWidth, pHeight);
+			this->event_click.fire(std::bind(&clickable::__click_final, this), pWidth, pHeight);
 	}
 }
 
