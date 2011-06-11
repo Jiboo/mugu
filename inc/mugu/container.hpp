@@ -47,9 +47,9 @@ public:
 		
 		this->children.push_back(pChild);
 	}
-	
+
 	void set_layout(layout_algo* pLayout) { this->cur_layout = pLayout; }
-	
+
 	std::vector<widget*> &get_children() { return this->children; };
 };
 

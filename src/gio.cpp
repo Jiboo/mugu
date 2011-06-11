@@ -24,21 +24,18 @@ namespace mugu
 
 void alert(std::string pTitle, std::string pMessage)
 {
-	/*dialog<flexgrid> *box = new dialog<flexgrid>;
-	box->set_rows(2);
-	box->set_cols(1);
-	box->set_title(pTitle);
-	
+	dialog *box = new dialog(pTitle);
+
 	box->add(new label(pMessage));
-	
+
 	button *ok = new button("OK");
 	box->add(ok);
-	
-	ok->event_click.set_async(true);
+
 	ok->event_click.connect([box](unsigned, unsigned) { box->close(); });
-	
+
+	box->set_layout(new grid(box, 2, 1));
 	box->adapt();
-	box->set_visible(true);*/
+	box->set_visible(true);
 }
 
 int messagebox(std::string pTitle, std::string pMessage, std::vector<std::string> pButtons)
@@ -46,12 +43,9 @@ int messagebox(std::string pTitle, std::string pMessage, std::vector<std::string
 	std::mutex mu;
 	int ret = -1;
 
-	/*mu.lock();
+	mu.lock();
 
-	dialog<flexgrid> *box = new dialog<flexgrid>;
-	box->set_rows(2);
-	box->set_cols(1);
-	box->set_title(pTitle);
+	dialog *box = new dialog(pTitle);
 	
 	box->event_close.connect([&mu]
 	{
@@ -60,7 +54,7 @@ int messagebox(std::string pTitle, std::string pMessage, std::vector<std::string
 
 	box->add(new label(pMessage));
 	
-	hboxf *choices = new hboxf(pButtons.size());
+	container *choices = new container();
 	box->add(choices);
 	
 	int index = 0;
@@ -78,11 +72,14 @@ int messagebox(std::string pTitle, std::string pMessage, std::vector<std::string
 		index++;
 	}
 	
+	choices->set_layout(new grid(choices, 1, pButtons.size()));
+	box->set_layout(new grid(box, 2, 1));
 	box->adapt();
 	box->set_visible(true);
 	
-	mu.lock();*/
+	mu.lock();
 	return ret;
 }
 
 } // namespace mugu
+

@@ -21,7 +21,7 @@ button::button(std::string pText)
 	: text(pText)
 {
 	this->extents = utils::get_text_extents(pText);
-	this->width = this->extents.width + (2*6) + (2*2); // padding, border
+	this->width = this->extents.width + (2*6) + (2*2);
 	this->height = this->extents.height + (2*2) + (2*2);
 }
 
