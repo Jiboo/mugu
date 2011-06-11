@@ -22,6 +22,8 @@ class label;
 class theme
 {
 public:
+	virtual ~theme() {}
+
 	virtual void draw(cairo_t* pContext, dialog* pDialog) = 0;
 	virtual void draw(cairo_t* pContext, button* pButton) = 0;
 	virtual void draw(cairo_t* pContext, label* pLabel) = 0;

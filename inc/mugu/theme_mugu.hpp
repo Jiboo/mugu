@@ -18,6 +18,8 @@ namespace mugu
 class theme_mugu : public theme
 {
 public:
+	virtual ~theme_mugu() {}
+
 	virtual void draw(cairo_t* pContext, dialog* pDialog);
 	virtual void draw(cairo_t* pContext, button* pButton);
 	virtual void draw(cairo_t* pContext, label* pLabel);
