@@ -18,7 +18,7 @@ namespace mugu
 class vboxf : public grid
 {
 public:
-	vboxf(container* pTarget, unsigned pRows) : grid(pTarget, pRows, 1) {}
+	vboxf(unsigned pRows) : grid(pRows, 1) {}
 	virtual ~vboxf() {}
 };
 

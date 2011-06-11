@@ -23,8 +23,7 @@ public:
 	MUGU_PROP(, get, unsigned, cols);
 
 public:
-	grid(container* pTarget, unsigned pRows, unsigned pCols)
-		: layout_algo(pTarget)
+	grid(unsigned pRows, unsigned pCols)
 	{
 		this->rows = pRows;
 		this->cols = pCols;
@@ -33,8 +32,8 @@ public:
 	virtual ~grid() {}
 
 public:
-	virtual void adapt();
-	virtual void layout();
+	virtual void adapt(container* pTarget);
+	virtual void layout(container* pTarget);
 };
 
 } // namespace mugu

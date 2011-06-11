@@ -16,9 +16,9 @@
 namespace mugu
 {
 
-void flexgrid::adapt()
+void flexgrid::adapt(container* pTarget)
 {
-	auto children = target->get_children();
+	auto children = pTarget->get_children();
 	unsigned w = 0, h = 0, r, c;
 
 	for(unsigned i = 0; i < children.size(); i++)
@@ -38,20 +38,20 @@ void flexgrid::adapt()
 	for(unsigned row : rows)
 		h += row;
 
-	target->set_width(w + (this->cols.size() - 1) * this->hgap);
-	target->set_height(h + (this->rows.size() - 1) * this->vgap);
+	pTarget->set_width(w + (this->cols.size() - 1) * this->hgap);
+	pTarget->set_height(h + (this->rows.size() - 1) * this->vgap);
 	
 	/*if(this->parent != nullptr)
 		parent->layout();
 	this->layout();*/
 }
 
-void flexgrid::layout()
+void flexgrid::layout(container* pTarget)
 {
-	auto children = target->get_children();
+	auto children = pTarget->get_children();
 	unsigned w = 0, h = 0, r, c;
-	unsigned offset_left = target->get_left();
-	unsigned offset_top = target->get_top();
+	unsigned offset_left = pTarget->get_left();
+	unsigned offset_top = pTarget->get_top();
 	
 	// balance
 	for(unsigned &col : cols)
@@ -59,8 +59,8 @@ void flexgrid::layout()
 	for(unsigned &row : rows)
 		h += row;
 		
-	signed diff_w = ((signed)target->get_width() - (this->cols.size() - 1) * this->hgap) - (signed)w;
-	signed diff_h = ((signed)target->get_height() - (this->rows.size() - 1) * this->vgap) - (signed)h;
+	signed diff_w = ((signed)pTarget->get_width() - (this->cols.size() - 1) * this->hgap) - (signed)w;
+	signed diff_h = ((signed)pTarget->get_height() - (this->rows.size() - 1) * this->vgap) - (signed)h;
 	
 	if(diff_w)
 	{
@@ -101,7 +101,7 @@ void flexgrid::layout()
 			
 		if(c == (this->cols.size() - 1))
 		{
-			offset_left = target->get_left();
+			offset_left = pTarget->get_left();
 			offset_top += this->rows[r] + this->vgap;
 		}
 		else

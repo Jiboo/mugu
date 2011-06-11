@@ -20,7 +20,7 @@ container::~container()
 {
 	for(widget* child : children)
 		delete child;
-	delete this->cur_layout;
+	delete this->cur_layout; // FIXME: Containers can't share layouts because of this
 }
 
 void container::draw(cairo_t* pContext)
@@ -37,12 +37,12 @@ void container::draw(cairo_t* pContext)
 
 void container::adapt()
 {
-	this->cur_layout->adapt();
+	this->cur_layout->adapt(this);
 }
 
 void container::layout()
 {
-	this->cur_layout->layout();
+	this->cur_layout->layout(this);
 }
 
 } // namespace mugu

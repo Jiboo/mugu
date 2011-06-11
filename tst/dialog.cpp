@@ -34,13 +34,13 @@ int main(int, char**)
 	button *r4 = new button("r{g4");
 	d1->add(r4);
 	
-	d1->set_layout(new flexgrid(d1, 4, 2));
+	d1->set_layout(new flexgrid(4, 2));
 	d1->set_visible(true);
 	d1->adapt();
 	
-	//d1->anim(&dialog::set_width, d1->get_width(), (unsigned)400, std::chrono::seconds(1));
+	d1->anim(&dialog::set_width, d1->get_width(), (unsigned)400, std::chrono::seconds(1));
 	//r1->anim(&button::set_width, r1->get_width(), (unsigned)800, std::chrono::seconds(3));
-	d1->set_width(800);
+	//d1->set_width(800);
 	
 	r1->event_click.connect([](unsigned, unsigned){ std::cout << "r1 clicked!" << std::endl; });
 	

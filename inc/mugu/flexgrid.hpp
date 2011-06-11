@@ -26,18 +26,14 @@ protected:
 
 public:
 
-	flexgrid(container* pTarget, unsigned pRows, unsigned pCols)
-		: layout_algo(pTarget), rows(pRows, 0), cols(pCols, 0) {}
+	flexgrid(unsigned pRows, unsigned pCols)
+		: rows(pRows, 0), cols(pCols, 0) {}
 
 	virtual ~flexgrid() {}
 
 public:
-	virtual void adapt();
-	virtual void layout();
-
-public:
-	void set_rows(unsigned pRows) { this->rows.assign(pRows, 0); }
-	void set_cols(unsigned pCols) { this->cols.assign(pCols, 0); }
+	virtual void adapt(container* pTarget);
+	virtual void layout(container* pTarget);
 };
 
 } // namespace mugu

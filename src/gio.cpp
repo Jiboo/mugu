@@ -33,7 +33,7 @@ void alert(std::string pTitle, std::string pMessage)
 
 	ok->event_click.connect([box](unsigned, unsigned) { box->close(); });
 
-	box->set_layout(new grid(box, 2, 1));
+	box->set_layout(new grid(2, 1));
 	box->adapt();
 	box->set_visible(true);
 }
@@ -72,8 +72,8 @@ int messagebox(std::string pTitle, std::string pMessage, std::vector<std::string
 		index++;
 	}
 	
-	choices->set_layout(new grid(choices, 1, pButtons.size()));
-	box->set_layout(new grid(box, 2, 1));
+	choices->set_layout(new grid(1, pButtons.size()));
+	box->set_layout(new grid(2, 1));
 	box->adapt();
 	box->set_visible(true);
 	

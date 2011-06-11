@@ -18,8 +18,8 @@ namespace mugu
 class hbox : public flexgrid
 {
 public:
-	hbox(container* pTarget, unsigned pCols)
-		: flexgrid(pTarget, 1, pCols)
+	hbox(unsigned pCols)
+		: flexgrid(1, pCols)
 	{}
 
 	virtual ~hbox() {}
