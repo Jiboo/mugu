@@ -79,7 +79,7 @@ void context::event_pump()
 			{
 				xcb_button_press_event_t *e = (xcb_button_press_event_t*)gen_e;
 				
-				if(this->dialogs.find(e->event) != this->dialogs.end())
+				if(e->detail == 1 && this->dialogs.find(e->event) != this->dialogs.end())
 					this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, true);
 			} break;
 			
@@ -87,7 +87,7 @@ void context::event_pump()
 			{
 				xcb_button_release_event_t *e = (xcb_button_release_event_t*)gen_e;
 				
-				if(this->dialogs.find(e->event) != this->dialogs.end())
+				if(e->detail == 1 && this->dialogs.find(e->event) != this->dialogs.end())
 					this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, false);
 			} break;
 			
