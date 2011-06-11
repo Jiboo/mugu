@@ -38,11 +38,14 @@ context::context()
 	
 	#undef REQUEST_ATOM
 	
+	this->keysyms = xcb_key_symbols_alloc(this->con);
+	
 	this->cur_theme = new theme_mugu;
 }
 
 context::~context()
 {
+	xcb_key_symbols_free(this->keysyms);
 	xcb_disconnect(this->con);
 	#ifndef NDEBUG
 		cairo_debug_reset_static_data();
@@ -75,12 +78,25 @@ void context::event_pump()
 					this->dialogs[e->window]->__configure_notify(e->width, e->height);
 			} break;
 			
+			case XCB_KEY_PRESS:
+			{
+				xcb_key_press_event_t *e = (xcb_key_press_event_t*)gen_e;
+				
+				int lCol;
+				if(e->state & 0x80) lCol = 4; // alt-gr
+				else if(e->state & 0x3) lCol = 1; // shift || caps-lock
+				else lCol = 2;
+				
+				if(this->dialogs.find(e->event) != this->dialogs.end())
+					this->dialogs[e->event]->__handle_key(xcb_key_press_lookup_keysym(this->keysyms, e, lCol), e->state);
+			} break;
+			
 			case XCB_BUTTON_PRESS:
 			{
 				xcb_button_press_event_t *e = (xcb_button_press_event_t*)gen_e;
 				
 				if(e->detail == 1 && this->dialogs.find(e->event) != this->dialogs.end())
-					this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, true);
+					this->dialogs[e->event]->__handle_button(e->event_x, e->event_y, true);
 			} break;
 			
 			case XCB_BUTTON_RELEASE:
@@ -88,7 +104,7 @@ void context::event_pump()
 				xcb_button_release_event_t *e = (xcb_button_release_event_t*)gen_e;
 				
 				if(e->detail == 1 && this->dialogs.find(e->event) != this->dialogs.end())
-					this->dialogs[e->event]->__handle_button( e->event_x, e->event_y, false);
+					this->dialogs[e->event]->__handle_button(e->event_x, e->event_y, false);
 			} break;
 			
 			case XCB_CLIENT_MESSAGE:

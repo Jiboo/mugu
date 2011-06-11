@@ -29,9 +29,7 @@ public:
 		this->event_click.connect(std::bind(&clickable::on_click, this, std::placeholders::_1, std::placeholders::_2));
 	}
 	
-	virtual ~clickable()
-	{
-	}
+	virtual ~clickable() {}
 
 public:
 	virtual void on_click(unsigned, unsigned) {}

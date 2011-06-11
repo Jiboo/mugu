@@ -9,12 +9,14 @@
  */
 
 #include <cstring>
+#include <cwchar>
 #include <xcb/xcb_atom.h>
 #include <xcb/xcb_icccm.h>
 #include <cairo/cairo-xcb.h>
 
 #include "mugu/dialog.hpp"
 #include "mugu/clickable.hpp"
+#include "mugu/editable.hpp"
 #include "mugu/container.hpp"
 #include "mugu/grid.hpp"
 
@@ -42,6 +44,7 @@ dialog::dialog(std::string pTitle)
 			  | XCB_EVENT_MASK_STRUCTURE_NOTIFY
 			  | XCB_EVENT_MASK_BUTTON_PRESS
 			  | XCB_EVENT_MASK_BUTTON_RELEASE
+			  | XCB_EVENT_MASK_KEY_PRESS
 	};
 
 	xcb_create_window(context::connection(),
@@ -184,6 +187,21 @@ void dialog::__handle_button(unsigned pLeft, unsigned pTop, bool pClicked)
 	}
 }
 
+void dialog::__handle_key(wchar_t pKey, unsigned pState)
+{
+	if(pState == 0)
+	{
+		editable *edi = dynamic_cast<editable*>(this->focused);
+		if(edi)
+			edi->__handle_key(pKey);
+	}
+	else
+	{
+		if(iswprint(pKey))
+			this->event_hotkey.fire([]{}, towupper(pKey), (pState & 0x4) == 0x04, (pState & 0x8) == 0x08, (pState & 0x1) == 0x01);
+	}
+}
+
 void dialog::__configure_notify(unsigned pWidth, unsigned pHeight)
 {
 	if(pWidth != this->width || pHeight != this->height)
@@ -236,3 +254,4 @@ clickable* dialog::get_widget(container *pContainer, unsigned pLeft, unsigned pT
 }
 
 } // namespace mugu
+

@@ -51,14 +51,10 @@ int main(int, char**)
 			throw event_stop();
 	});
 	
-	/*dialog* d1 = new dialog("tst/dialog");
-	d1->set_layout(new hbox(d1, 2));
-	d1->set_visible(true);
-	
-	d1->add(new label("test1"));
-	d1->add(new label("test2"));
-	
-	d1->adapt();*/
+	d1->event_hotkey.connect([](wchar_t pKey, bool pCtrl, bool pAlt, bool pShift)
+	{
+		std::cout << "hotkey: " << (char)pKey << " " << pCtrl << " " << pAlt << " " << pShift << std::endl;
+	});
 	
 	context::clean();
 	return 0;

@@ -35,6 +35,7 @@ public:
 	cairo_surface_t *cache;
 	
 	event<> event_close;
+	event<wchar_t, bool, bool, bool> event_hotkey;
 
 public:
 	dialog(std::string pTitle);
@@ -61,6 +62,7 @@ public:
 	void set_title(std::string pTitle);
 
 	void __handle_button(unsigned pLeft, unsigned pTop, bool pClicked);
+	void __handle_key(wchar_t pChar, unsigned pState);
 	void __configure_notify(unsigned pWidth, unsigned pHeight);
 	void __handle_close_request();
 	

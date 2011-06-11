@@ -14,6 +14,7 @@
 #include <map>
 #include <thread>
 #include <xcb/xcb.h>
+#include <xcb/xcb_keysyms.h>
 #include <cairo/cairo.h>
 #include <fontconfig/fontconfig.h>
 
@@ -38,6 +39,8 @@ protected:
 	xcb_atom_t wm_delete_window_atom;
 	xcb_atom_t net_wm_name_atom;
 	xcb_atom_t utf8_string_atom;
+	
+	xcb_key_symbols_t *keysyms;
 	
 	theme* cur_theme;
 
